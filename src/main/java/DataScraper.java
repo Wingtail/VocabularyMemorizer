@@ -5,28 +5,47 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.BufferedWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class DataScraper extends Thread{
 
+    //String word;
+    Word w;
+    Dictionary dictionary;
+    BufferedWriter out;
 
-
-
-
-    public void run(String word)
+    public DataScraper(String word, Dictionary dictionary)
     {
-        Word w = new Word(word);
+        //this.word = word;
+        w = new Word(word.split("\\.|,|;|\\s")[0]);
+        this.dictionary = dictionary;
+        try {
+            out = new BufferedWriter(new OutputStreamWriter(new
+                    FileOutputStream(java.io.FileDescriptor.out), "ASCII"), 512);
+        }catch(IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public void run()
+    {
         dictionary(w);
         thesaurus(w);
         etymology(w);
+        dictionary.addWord(w);
     }
 
     public void thesaurus(Word word) {
         try {
-            Document doc = Jsoup.connect("https://www.thesaurus.com/browse/" + word.toString()).userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0")
-                    .referrer("http://www.google.com").timeout(1000*5).ignoreHttpErrors(true).get();
+            Document doc = Jsoup.connect("https://www.thesaurus.com/browse/" + word.toString()+"?s=t").userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0")
+                    .referrer("http://www.google.com").timeout(1000*100).ignoreHttpErrors(true).get();
             if(!doc.toString().contains("no thesaurus results"))
             {
                 Elements keywords = doc.select("ul.css-i32syg.e9i53te2").clone();
@@ -45,12 +64,13 @@ public class DataScraper extends Thread{
                     }
                 }
             }else{
-                System.out.println("Error! No Keywords available!");
+                //System.out.println("Error! No Keywords available!    :   Word: "+word.toString());
             }
 
         }catch(IOException e)
         {
             e.printStackTrace();
+            System.out.println("Exception word: "+word.toString());
         }
     }
 
@@ -65,6 +85,7 @@ public class DataScraper extends Thread{
                 if(str.equals(word.toString()))
                 {
                     doc = Jsoup.connect(element.attr("abs:href")).get();
+                    //System.out.println("READ "+word.toString());
                     break;
                 }
             }
@@ -98,7 +119,7 @@ public class DataScraper extends Thread{
                 String switchWord = doc.selectFirst("h2.css-6gthty.e19m0k9k0").select("a").first().attr("abs:href");
                 doc = Jsoup.connect(switchWord).get();
             }
-            actualWord = doc.select("section.css-0.e1rg2mtf0").select("h1.css-1qbmdpe.e1rg2mtf5").text();
+            actualWord = doc.select("section.css-0.e1rg2mtf0").select("h1.css-1qbmdpe.e1rg2mtf5").text().split("\\s|,|;")[0];
 
             if(doc.select("span.css-1khtv86.e1rg2mtf2").first() != null) {
                 pronounciation = doc.select("span.css-1khtv86.e1rg2mtf2").first().text();
@@ -124,8 +145,14 @@ public class DataScraper extends Thread{
             word.setDefinitions(dictionary);
             word.setExampleSentences(sentences);
 
-            System.out.println(actualWord);
-            System.out.println(pronounciation);
+            try{
+                out.write(actualWord+"\n");
+                out.write(pronounciation+"\n");
+                out.flush();
+            }catch(IOException e)
+            {
+                e.printStackTrace();
+            }
         }catch(IOException e)
         {
             e.printStackTrace();

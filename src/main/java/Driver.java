@@ -7,7 +7,11 @@ public class Driver {
 
     public static void main(String[] args)
     {
-        new DataScraper().run("add");
+        //new DataScraper("at",new Dictionary()).run();
+        Dictionary dictionary = new Dictionary();
+        dictionary.searchWordsInFile("data/Words.txt");
+        System.out.println("Complete");
+        dictionary.save();
         /*DictionaryElement element = new DictionaryElement('0');
         element.makeMaster();
         System.out.println("YAY");*/
