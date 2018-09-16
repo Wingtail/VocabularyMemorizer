@@ -7,7 +7,11 @@ public class Driver {
 
     public static void main(String[] args)
     {
-        try {
+        new DataScraper().run("add");
+        /*DictionaryElement element = new DictionaryElement('0');
+        element.makeMaster();
+        System.out.println("YAY");*/
+        /*try {
             File file = new File("data/Words.txt");
             BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
             String line;
@@ -16,11 +20,11 @@ public class Driver {
 
             while((line = bufferedReader.readLine())!=null)
             {
-                new DataScraper(line).run();
+                new DataScraper().run(line);
             }
         }catch(IOException e)
         {
             e.printStackTrace();
-        }
+        }*/
     }
 }
