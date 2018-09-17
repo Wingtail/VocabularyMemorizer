@@ -17,6 +17,11 @@ public class JsonEncoder {
         gson = new Gson();
     }
 
+    public void load(Dictionary dictionary) throws IOException
+    {
+
+    }
+
     public void save(Dictionary dictionary) throws IOException
     {
         save.createNewFile();
