@@ -31,11 +31,22 @@ public class Dictionary {
         }
     }
 
+    public Dictionary load()
+    {
+        try {
+            return encoder.load();
+        }catch(IOException e)
+        {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public void addSearch(String word)
     {
         if(searchWord(word) != null)
         {
-            DataScraper scraper = new DataScraper(word, this);
+            DataScraper scraper = new DataScraper(word, this, false);
             scraper.start();
             if(!scraper.isAlive())
             {
@@ -53,26 +64,25 @@ public class Dictionary {
                 String line;
 
                 int count = 0;
-                List<Thread> threads = new ArrayList();
                         while ((line = bufferedReader.readLine()) != null) {
-                            Thread t = new DataScraper(line, this);
-                            System.out.println("hey");
+                            Thread t = new DataScraper(line, this, true);
                             t.start();
-                            threads.add(t);
+                            DataScraper.threads.add(t);
                         }
-                    for(Thread thread:threads)
+                    for(Thread thread:DataScraper.threads)
                     {
                         try {
-                            thread.join();
+                            thread.join(200000);
                         }catch(InterruptedException e)
                         {
                             e.printStackTrace();
                         }
                     }
 
-                    threads.clear();
+                    DataScraper.threads.clear();
 
             }
+            save();
         }catch(IOException e)
         {
             e.printStackTrace();
@@ -104,7 +114,19 @@ public class Dictionary {
             }
         }
 
-        current.words.add(word);
+        boolean addWord = true;
+        for(i =0;i<current.words.size();i++)
+        {
+            if(current.words.get(i).getWord().equals(word.getWord()))
+            {
+                addWord = false;
+                break;
+            }
+        }
+        if(addWord) {
+            numWords++;
+            current.words.add(word);
+        }
     }
 
     public Word[] searchWord(String word)

@@ -24,6 +24,11 @@ public class Word {
         this.word = word;
     }
 
+    public String getWord()
+    {
+        return word;
+    }
+
     public void pronounciation(String p)
     {
         pronounciation = p;

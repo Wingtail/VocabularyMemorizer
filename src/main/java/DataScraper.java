@@ -17,13 +17,16 @@ public class DataScraper extends Thread{
 
     //String word;
     Word w;
+    static List<Thread> threads = new ArrayList<Thread>();
     Dictionary dictionary;
     BufferedWriter out;
+    boolean save;
 
-    public DataScraper(String word, Dictionary dictionary)
+    public DataScraper(String word, Dictionary dictionary, boolean autosave)
     {
         //this.word = word;
         w = new Word(word.split("\\.|,|;|\\s")[0]);
+        save = autosave;
         this.dictionary = dictionary;
         try {
             out = new BufferedWriter(new OutputStreamWriter(new
@@ -39,7 +42,9 @@ public class DataScraper extends Thread{
         dictionary(w);
         thesaurus(w);
         etymology(w);
-        dictionary.addWord(w);
+        if(save) {
+            dictionary.addWord(w);
+        }
     }
 
     public void thesaurus(Word word) {
