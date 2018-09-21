@@ -1,0 +1,31 @@
+Divides vocabulary into awareness category.
+
+Level 3 : fully memorized
+
+Level 2 : aware but lack retention
+
+Level 1 : Cannot recall awareness
+
+
+Vocabulary awareness evaluates in 2 categories
+1. Long term memorization
+2. Short term memorization
+
+Long term memorization
+    # correct / # tested
+    Test process:
+        Words lowest ranking test first
+        Long term memorization records during
+
+Work on time period algorithm
+
+    Longer time period, greater effectiveness on memorization
+Implementation on sets --> Work on a set of words after completing relative memorization
+
+Frequency of category
+
+    Practice Level 1 first --> level 2 --> level 3
+        Test based on frequency
+               Level 1 : 50%
+               Level 2 : 30%
+               Level 3 : 20%

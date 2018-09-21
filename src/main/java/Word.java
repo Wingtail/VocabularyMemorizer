@@ -8,6 +8,15 @@ public class Word {
     private String[] exampleSentences;
     private String etymology;
 
+    public int consecRight = 0;
+    public int consecWrong = 0;
+
+    public int totConsecRight = 0;
+    public int dataPoints = 0;
+    public double avgConsecRight = 0.0;
+
+    public double time = -1;
+
     public Word(String word)
     {
         this.word = word;

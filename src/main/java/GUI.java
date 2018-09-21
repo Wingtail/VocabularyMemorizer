@@ -3,11 +3,11 @@ import javafx.scene.input.KeyCode;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
+import java.io.File;
+import java.util.ArrayList;
 
 public class GUI {
     private JTabbedPane tabbedPane1;
@@ -23,6 +23,10 @@ public class GUI {
     private JEditorPane eeditor;
     private JEditorPane deditor;
     private JEditorPane keyword;
+    private JEditorPane QuizEditor;
+    private JPanel Console;
+    private JTextField console;
+    private JTextArea prompt;
 
     Word currentWord;
 
@@ -30,13 +34,23 @@ public class GUI {
     Dictionary dictionary;
     boolean autosave = false;
     boolean textErase = false;
+    Quiz quiz;
 
     public GUI() {
-        dictionary = new Dictionary();
+        dictionary = new Dictionary("standard");
         deditor.setContentType("text/html");
         eeditor.setContentType("text/html");
         keyword.setContentType("text/html");
+        QuizEditor.setContentType("text/html");
 
+        dictionary = dictionary.load("standard.dic");
+
+        if(dictionary == null)
+        {
+            dictionary = new Dictionary("standard");
+        }
+
+        quiz = new Quiz(dictionary);
 
         dfield.addKeyListener(new KeyAdapter() {
             @Override
@@ -49,8 +63,13 @@ public class GUI {
                 if(e.getKeyChar() == KeyEvent.VK_ENTER)
                 {
                     command = dfield.getText();
-                    deditor.setText("");
-                    executeCommand();
+                    deditor.setText("<html></html>");
+                    searchWord();
+                    dfield.setText("");
+                }
+                else if(!dfield.getText().contains("/")){
+                    System.out.println(dfield.getText());
+                    deditor.setText(renderCandidates(dictionary.searchRelativeWords(dfield.getText())));
                 }
             }
         });
@@ -75,8 +94,10 @@ public class GUI {
                 if(e.getKeyChar() == KeyEvent.VK_ENTER)
                 {
                     command = efield.getText();
-                    deditor.setText("");
-                    executeCommand();
+                    efield.setText("");
+                    searchWord();
+                }else if(!efield.getText().contains("/")){
+                    eeditor.setText(renderCandidates(dictionary.searchRelativeWords(efield.getText())));
                 }
             }
         });
@@ -102,7 +123,9 @@ public class GUI {
                 {
                     command = kfield.getText();
                     kfield.setText("");
-                    executeCommand();
+                    searchWord();
+                }else if(!kfield.getText().contains("/")){
+                    keyword.setText(renderCandidates(dictionary.searchRelativeWords(kfield.getText())));
                 }
             }
         });
@@ -116,48 +139,187 @@ public class GUI {
                 }
             }
         });
+        pfield.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                if(e.getKeyChar() == KeyEvent.VK_ENTER)
+                {
+                    command = pfield.getText();
+                    pfield.setText("");
+                    renderWord(quizTime(command));
+                }
+            }
+        });
+
+        QuizEditor.addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                if(!quiz.activated)
+                {
+                    quiz.nextWord();
+
+                    System.out.println("Num Words in Dictionary: "+quiz.dictionary.numWords);
+                    if(quiz.currentWord != null) {
+                        QuizEditor.setText("<html><center><font size=\"40\"><b>" + quiz.currentWord.getWord() + "</b></font></center></html>");
+                        quiz.activated = true;
+                    }else{
+                        QuizEditor.setText("<html><center><font size=\"40\"><b>" + "NO WORDS TO TEST!" + "</b></font></center></html>");
+                    }
+
+                }else if(quiz.currentWord == null)
+                {
+                    quiz.activated = false;
+                }
+            }
+        });
+        console.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                if(textErase)
+                {
+                    console.setText("");
+                    textErase = false;
+                }
+                if(e.getKeyChar() == KeyEvent.VK_ENTER)
+                {
+                    command = console.getText();
+                    executeCommand();
+                    textErase = true;
+                }
+            }
+        });
     }
 
-    public void executeCommand()
+    public boolean quizTime(String key)
     {
-        if(command.contains("/")) // then it is a command
-        {
-            command = command.replaceAll("\\s|/","");
-            if(command.equals("save"))
-            {
-                dictionary.addWord(currentWord);
-            }else if(command.equals("getWordList"))
-            {
-                dictionary.searchWordsInFile(command.substring(command.indexOf(" ")+1));
-            }else if(command.equals("toggleAutoSave"))
-            {
-                autosave = !autosave;
-                dfield.setText("autosave is "+autosave);
-                efield.setText("autosave is "+autosave);
-                kfield.setText("autosave is "+autosave);
-                textErase = true;
-            }else if(command.equals("saveDictionary"))
-            {
-                dictionary.save();
-                dfield.setText("Dictionary saved- Words: "+dictionary.numWords);
-                efield.setText("Dictionary saved- Words: "+dictionary.numWords);
-                kfield.setText("Dictionary saved- Words: "+dictionary.numWords);
-                textErase = true;
+        return quiz.checkCorrect(key);
+    }
+
+    public String renderCandidates(ArrayList<Word> words)
+    {
+        StringBuilder builder = new StringBuilder();
+        builder.append("<html><font size = \"36\">");
+
+        builder.append("<ul>");
+        if(words!=null) {
+            for (Word define : words) {
+                builder.append("<li>");
+                builder.append("<font size = \"18\">");
+                builder.append(define.getWord());
+                builder.append("</font>");
+                builder.append("</li>");
             }
-            else if(command.equals("loadDictionary"))
+        }
+        builder.append("</ul>");
+        builder.append("</font></html>");
+        return builder.toString();
+    }
+
+    public void renderWord(boolean correct)
+    {
+        /*System.out.println("---------------------");
+        for(Word word : quiz.dictionary.totalWords)
+        {
+            System.out.println(word.getWord()+"  seconds left: "+(word.time - System.currentTimeMillis())/1000);
+        }*/
+
+        if(correct) {
+            long time = System.currentTimeMillis();
+            quiz.nextWord();
+            if(quiz.currentWord == null)
             {
-                dictionary.save();
-                dfield.setText("Dictionary loaded- Words: "+dictionary.numWords);
-                efield.setText("Dictionary loaded- Words: "+dictionary.numWords);
-                kfield.setText("Dictionary loaded- Words: "+dictionary.numWords);
-                textErase = true;
+                QuizEditor.setText("<html><center><font size=\"40\"><b>" + "NO WORDS LEFT TO TEST" + "</b></font></center></html>");
+            }else {
+                QuizEditor.setText("<html><center><font size=\"40\"><b>" + quiz.currentWord.getWord() + "</b></font></center></html>");
             }
         }else{
-            currentWord = search(command);
-            deditor.setText(definitionBuilder(currentWord));
-            eeditor.setText(etymologyBuilder(currentWord));
-            keyword.setText(keywordBuilder(currentWord));
+            String keys = keywordBuilder(quiz.currentWord);
+            QuizEditor.setText(keys);
         }
+
+    }
+
+    public String executeCommand()
+    {
+            if(command.replaceAll("\\s","").equals("save"))
+            {
+                dictionary.addWord(currentWord);
+                prompt.append("saved\n");
+            }else if(command.replaceAll("\\s","").equals("clear"))
+            {
+                prompt.setText("");
+            }
+            else if(command.contains("addKeyword"))
+            {
+                currentWord.addKeyword(command.substring(command.indexOf("\"")+1,command.length()-1));
+                prompt.append("added keyword\n");
+            }
+            else if(command.replaceAll("\\s","").equals("retrieveWordList"))
+            {
+                JFileChooser chooser = new JFileChooser();
+                chooser.setCurrentDirectory(new File("."));
+                int returnval = chooser.showOpenDialog(null);
+                if(returnval == JFileChooser.APPROVE_OPTION) {
+                    prompt.append("Retrieving file..\n");
+                    dictionary.searchWordsInFile(chooser.getSelectedFile().getPath());
+                    prompt.append("Complete!\n");
+                }
+            }else if(command.replaceAll("\\s","").equals("toggleAutoSave"))
+            {
+                autosave = !autosave;
+                prompt.append("autosave is now "+autosave+"\n");
+
+            }else if(command.contains("saveDictionary"))
+            {
+                if(command.indexOf(" ") >= 0)
+                {
+                    dictionary.name = command.substring(command.indexOf(" "));
+                }
+                dictionary.save();
+                prompt.append(dictionary.name+" saved! Words: "+dictionary.numWords+"\n");
+
+            }
+            else if(command.contains("loadDictionary"))
+            {
+                JFileChooser chooser = new JFileChooser();
+                chooser.setCurrentDirectory(new File("."));
+                int returnval = chooser.showOpenDialog(null);
+                if(returnval == JFileChooser.APPROVE_OPTION) {
+                    prompt.append("Retrieving file..\n");
+                    dictionary = dictionary.load(chooser.getSelectedFile().getPath());
+                    quiz.dictionary = dictionary;
+                    prompt.append(dictionary.name+" loaded! Words: "+dictionary.numWords+"\n");
+                    prompt.append("Complete!\n");
+                }
+
+            }else if(command.equals("help"))
+            {
+                prompt.append("loadDictionary \'dictionaryName\'-> loadsDictionaryFile. Don't need quotations while writing dictionary name\n");
+                prompt.append("saveDictionary -> savesDictionaryFile\n");
+                prompt.append("toggleAutoSave -> Autosave or not?\n");
+                prompt.append("addKeyword -> add keyword to current word you've searched\n");
+                prompt.append("retrieveWordList -> scrapes all vocabulary put onto a text file into useful interfaces\n");
+                prompt.append("save -> saves current word you've searched (practically useless after you toggle auto save)\n");
+            }
+            else{
+                prompt.append("Command Not Found!\nTry typing help");
+            }
+            textErase = true;
+
+        return command;
+    }
+
+    public void searchWord()
+    {
+        command = command.replaceAll("\\s|/","");
+        currentWord = search(command);
+        if(autosave)
+        {
+            dictionary.addWord(currentWord);
+        }
+        deditor.setText(definitionBuilder(currentWord));
+        eeditor.setText(etymologyBuilder(currentWord));
+        keyword.setText(keywordBuilder(currentWord));
     }
 
     public String definitionBuilder(Word word)
@@ -221,40 +383,39 @@ public class GUI {
         builder.append(word.getWord());
         builder.append("</font>");
         builder.append("</b><br></br>");
-        String[] words = word.etymology().split("\\s");
-        boolean quoted = false;
-        for(String w : words) {
-            if(w.startsWith("\""))
-            {
-                quoted = true;
-            }
-            if(w.contains("French")||w.contains("Latin")||w.contains("Greek")) {
-                builder.append("<font size = \"18\" color=\"blue\">");
-                builder.append(w);
-                builder.append(" ");
-                builder.append("</font>");
-            }
-            else{
-                if(quoted)
-                {
-                    builder.append("<font size = \"18\" color=\"green\">");
+
+        if(word.etymology() != null) {
+            String[] words = word.etymology().split("\\s");
+            boolean quoted = false;
+            for (String w : words) {
+                if (w.startsWith("\"")) {
+                    quoted = true;
+                }
+                if (w.contains("French") || w.contains("Latin") || w.contains("Greek")) {
+                    builder.append("<font size = \"18\" color=\"blue\">");
                     builder.append(w);
                     builder.append(" ");
                     builder.append("</font>");
-                }else {
-                    builder.append("<font size = \"18\">");
-                    builder.append(w);
-                    builder.append(" ");
-                    builder.append("</font>");
+                } else {
+                    if (quoted) {
+                        builder.append("<font size = \"18\" color=\"green\">");
+                        builder.append(w);
+                        builder.append(" ");
+                        builder.append("</font>");
+                    } else {
+                        builder.append("<font size = \"18\">");
+                        builder.append(w);
+                        builder.append(" ");
+                        builder.append("</font>");
+                    }
+                }
+
+                if (w.endsWith("\"")) {
+                    quoted = false;
                 }
             }
-
-            if(w.endsWith("\""))
-            {
-                quoted = false;
-            }
+            builder.append("</html>");
         }
-        builder.append("</html>");
         return builder.toString();
     }
 

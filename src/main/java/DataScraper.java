@@ -5,26 +5,69 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import javax.net.ssl.*;
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class DataScraper extends Thread{
+
+
+    public static void setSSL() {
+
+        try {
+            TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager() {
+                public X509Certificate[] getAcceptedIssuers() {
+                    return null;
+                }
+
+                public void checkClientTrusted(X509Certificate[] certs, String authType) {
+                }
+
+                public void checkServerTrusted(X509Certificate[] certs, String authType) {
+                }
+            }};
+            SSLContext sc = SSLContext.getInstance("SSL");
+            sc.init(null, trustAllCerts, new SecureRandom());
+            HttpsURLConnection.setDefaultHostnameVerifier(
+                    new HostnameVerifier() {
+                        public boolean verify(String hostname, SSLSession session) {
+                            return true;
+                        }
+                    }
+            );
+            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+        }catch(NoSuchAlgorithmException e)
+        {
+            e.printStackTrace();
+        }catch(KeyManagementException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
 
     //String word;
     Word w;
     static List<Thread> threads = new ArrayList<Thread>();
     Dictionary dictionary;
     BufferedWriter out;
-    boolean save;
+    boolean save = true;
 
     public DataScraper(String word, Dictionary dictionary, boolean autosave)
     {
         //this.word = word;
+        setSSL();
+        System.setProperty("https.protocols", "TLSv1,TLSv1.1,TLSv1.2");
         w = new Word(word.split("\\.|,|;|\\s")[0]);
         save = autosave;
         this.dictionary = dictionary;
@@ -44,61 +87,87 @@ public class DataScraper extends Thread{
         etymology(w);
         if(save) {
             dictionary.addWord(w);
+            dictionary.totalWords.add(w);
         }
     }
 
     public void thesaurus(Word word) {
-        try {
-            Document doc = Jsoup.connect("https://www.thesaurus.com/browse/" + word.toString()+"?s=t").userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0")
-                    .referrer("http://www.google.com").timeout(1000*100).ignoreHttpErrors(true).get();
-            if(!doc.toString().contains("no thesaurus results"))
-            {
-                Elements keywords = doc.select("ul.css-i32syg.e9i53te2").clone();
-                if(keywords.size() > 0)
-                {
-                    for(Element element : keywords) {
+        int count = 0;
+
+        while(count <= 20) {
+            try {
+                Document doc;
+                doc = Jsoup.connect("http://www.synonymy.com/synonym.php?word=" + word.toString()).userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0")
+                        .referrer("http://www.google.com").timeout(1000 * 10000).ignoreHttpErrors(true).validateTLSCertificates(false).get();
+                if (!doc.toString().contains("no thesaurus results")) {
+                    Elements keywords = doc.select("td.arial-12-noir").clone().select("span").clone();
+                    if (keywords.size() > 0) {
+                    /*for(Element element : keywords) {
                         keywords = element.select("strong").clone();
-                    }
-                    for(Element element : keywords)
-                    {
-                        String[] keys = element.text().split(";\\s|,\\s");
-                        for(String string : keys)
-                        {
-                            word.addKeyword(string);
+                    }*/
+                        for (Element element : keywords) {
+                            String[] keys = element.text().split(";\\s|,\\s|:\\s");
+                            for (String string : keys) {
+                                if (!(string.equals("adjective") || string.equals("noun") || string.equals("verb"))) {
+                                    word.addKeyword(string);
+                                }
+                            }
                         }
                     }
+                } else {
+                    //System.out.println("Error! No Keywords available!    :   Word: "+word.toString());
                 }
-            }else{
-                //System.out.println("Error! No Keywords available!    :   Word: "+word.toString());
-            }
 
-        }catch(IOException e)
-        {
-            e.printStackTrace();
-            System.out.println("Exception word: "+word.toString());
+                break;
+
+            } catch(SocketException e)
+            {
+                count++;
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+                System.out.println("Exception word: " + word.toString());
+                break;
+            }
         }
     }
 
     public void etymology(Word word)
     {
-        try {
-            Document doc = Jsoup.connect("https://www.etymonline.com/search?q=" + word.toString()).get();
-            Elements words = doc.select("a.word--C9UPa.word_thumbnail--2DBNk");
-            for(Element element : words)
-            {
-                String str = element.select("p.notranslate.word__name--TTbAA.word_thumbnail__name--1khEg").text().split("\\s")[0];
-                if(str.equals(word.toString()))
-                {
-                    doc = Jsoup.connect(element.attr("abs:href")).get();
-                    //System.out.println("READ "+word.toString());
-                    break;
+        int count = 0;
+
+        while(count <= 20) {
+            try {
+                Document doc = Jsoup.connect("https://www.etymonline.com/search?q=" + word.toString()).userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0")
+                        .referrer("http://www.google.com").timeout(1000 * 80).ignoreHttpErrors(true).validateTLSCertificates(false).get();
+                Elements words = doc.select("a.word--C9UPa.word_thumbnail--2DBNk");
+                for (Element element : words) {
+                    String str = element.select("p.notranslate.word__name--TTbAA.word_thumbnail__name--1khEg").text().split("\\s")[0];
+                    if (str.equals(word.toString())) {
+                        int c = 0;
+                        while(c<=20) {
+                            try {
+                                doc = Jsoup.connect(element.attr("abs:href")).userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0")
+                                        .referrer("http://www.google.com").timeout(1000 * 80).ignoreHttpErrors(true).validateTLSCertificates(false).get();
+                                break;
+                            } catch (SocketException e) {
+                                c++;
+                            }
+                        }
+                        //System.out.println("READ "+word.toString());
+                        break;
+                    }
                 }
+                String etymology = doc.select("section.word__defination--2q7ZH").text();
+                word.setEtymology(etymology);
+                break;
+            }catch(SocketException e)
+            {
+                count++;
             }
-            String etymology = doc.select("section.word__defination--2q7ZH").text();
-            word.setEtymology(etymology);
-        }catch(IOException e)
-        {
-            e.printStackTrace();
+            catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -117,7 +186,8 @@ public class DataScraper extends Thread{
         String pronounciation = "";
 
         try{
-            Document doc = Jsoup.connect("https://www.dictionary.com/browse/"+word.toString()+"?s=t").get();
+            Document doc = Jsoup.connect("https://www.dictionary.com/browse/"+word.toString()+"?s=t").userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0")
+                    .referrer("http://www.google.com").timeout(1000*10000).ignoreHttpErrors(true).get();
             actualWord = word.toString();
             if(doc.select("span.css-1m7ldyv.e6aw9qa0").clone().size() > 0)
             {

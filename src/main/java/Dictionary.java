@@ -11,14 +11,20 @@ import java.util.concurrent.TimeUnit;
 
 public class Dictionary {
     DictionaryElement start;
+    String name;
     int numWords;
-    transient JsonEncoder encoder;
+    transient JsonEncoder encoder; //prevent stack overflow error
 
-    public Dictionary()
+    ArrayList<Word> totalWords;
+
+    public Dictionary(String name)
     {
+        this.name = name;
         start = new DictionaryElement('\0');
         numWords = 0;
-        encoder = new JsonEncoder();
+        encoder = new JsonEncoder(name);
+
+        totalWords = new ArrayList<Word>();
     }
 
     public void save()
@@ -31,10 +37,10 @@ public class Dictionary {
         }
     }
 
-    public Dictionary load()
+    public Dictionary load(String dir)
     {
         try {
-            return encoder.load();
+            return encoder.load(dir);
         }catch(IOException e)
         {
             e.printStackTrace();
@@ -89,6 +95,51 @@ public class Dictionary {
         }
     }
 
+    public ArrayList<Word> searchRelativeWords(String word)
+    {
+        word = word.replaceAll("\\s","");
+        if(word != null) {
+            char[] words = word.toCharArray();
+            int i;
+            DictionaryElement current = start;
+
+            ArrayList<Word> wordList = new ArrayList<Word>();
+
+            for (i = 0; i < words.length; i++) {
+                char index = words[i];
+                if (index > 90) {
+                    index -= 71;
+                } else {
+                    index -= 65;
+                }
+                System.out.println(words[i]);
+                if (current.links[index] != null) {
+                    current = current.links[index];
+                }
+                if (i == words.length - 1) {
+                    wordList.addAll(current.words);
+                }
+            }
+            wordList = searchAllWords(current, wordList);
+            return wordList;
+        }
+
+        return null;
+    }
+
+    public ArrayList<Word> searchAllWords(DictionaryElement element, ArrayList<Word> words)
+    {
+        words.addAll(element.words);
+        for(DictionaryElement e : element.links)
+        {
+            if(e != null)
+            {
+                searchAllWords(e,words);
+            }
+        }
+        return words;
+    }
+
     public void addWord(Word word)
     {
         char[] words = word.toString().toCharArray();
@@ -109,8 +160,8 @@ public class Dictionary {
 
                 if (current.links[index] == null) {
                     current.links[index] = new DictionaryElement(words[i]);
-                    current = current.links[index];
                 }
+                current = current.links[index];
             }
         }
 
@@ -124,6 +175,7 @@ public class Dictionary {
             }
         }
         if(addWord) {
+            totalWords.add(word);
             numWords++;
             current.words.add(word);
         }

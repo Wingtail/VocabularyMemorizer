@@ -6,18 +6,23 @@ import java.util.LinkedList;
 
 public class JsonEncoder {
     Gson gson;
-    File save = new File("save.json");
+    File save;
     FileWriter writer;
 
 
-    public JsonEncoder ()
+    public JsonEncoder (String name)
     {
         gson = new Gson();
+        save = new File(name+".dic");
     }
 
-    public Dictionary load() throws IOException
+    public Dictionary load(String dir) throws IOException
     {
-        BufferedReader bufferedReader = new BufferedReader(new FileReader(save));
+        if(!save.exists())
+        {
+            save.createNewFile();
+        }
+        BufferedReader bufferedReader = new BufferedReader(new FileReader(new File(dir)));
         String line;
         StringBuilder builder = new StringBuilder();
         while((line = bufferedReader.readLine()) != null)
@@ -31,7 +36,7 @@ public class JsonEncoder {
 
     public void save(Dictionary dictionary) throws IOException
     {
-        save.createNewFile();
+        save = new File(dictionary.name+".dic");
         writer = new FileWriter(save);
         String json = gson.toJson(dictionary);
         writer.write(json);

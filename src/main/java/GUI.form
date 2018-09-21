@@ -12,6 +12,34 @@
         <properties/>
         <border type="none"/>
         <children>
+          <grid id="2ae8a" binding="Console" layout-manager="BorderLayout" hgap="0" vgap="0">
+            <constraints>
+              <tabbedpane title="Console"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="59580" class="javax.swing.JTextField" binding="console">
+                <constraints border-constraint="South"/>
+                <properties>
+                  <editable value="true"/>
+                </properties>
+              </component>
+              <scrollpane id="c0fbd">
+                <constraints border-constraint="Center"/>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="bb9da" class="javax.swing.JTextArea" binding="prompt">
+                    <constraints/>
+                    <properties>
+                      <editable value="false"/>
+                    </properties>
+                  </component>
+                </children>
+              </scrollpane>
+            </children>
+          </grid>
           <grid id="1910e" binding="Definition" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints>
               <tabbedpane title="Definition"/>
@@ -49,12 +77,19 @@
                 <constraints border-constraint="South"/>
                 <properties/>
               </component>
-              <component id="5e53c" class="javax.swing.JEditorPane" binding="eeditor">
+              <scrollpane id="454c8">
                 <constraints border-constraint="Center"/>
-                <properties>
-                  <editable value="false"/>
-                </properties>
-              </component>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="db2e3" class="javax.swing.JEditorPane" binding="eeditor">
+                    <constraints/>
+                    <properties>
+                      <editable value="false"/>
+                    </properties>
+                  </component>
+                </children>
+              </scrollpane>
             </children>
           </grid>
           <grid id="f6445" binding="Keywords" layout-manager="BorderLayout" hgap="0" vgap="0">
@@ -68,12 +103,19 @@
                 <constraints border-constraint="South"/>
                 <properties/>
               </component>
-              <component id="16d4" class="javax.swing.JEditorPane" binding="keyword">
+              <scrollpane id="f0b5a">
                 <constraints border-constraint="Center"/>
-                <properties>
-                  <editable value="false"/>
-                </properties>
-              </component>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="5395e" class="javax.swing.JEditorPane" binding="keyword">
+                    <constraints/>
+                    <properties>
+                      <editable value="false"/>
+                    </properties>
+                  </component>
+                </children>
+              </scrollpane>
             </children>
           </grid>
           <grid id="92499" binding="Practise" layout-manager="BorderLayout" hgap="0" vgap="0">
@@ -87,6 +129,19 @@
                 <constraints border-constraint="South"/>
                 <properties/>
               </component>
+              <scrollpane id="8c416">
+                <constraints border-constraint="Center"/>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="89fb" class="javax.swing.JEditorPane" binding="QuizEditor">
+                    <constraints/>
+                    <properties>
+                      <editable value="false"/>
+                    </properties>
+                  </component>
+                </children>
+              </scrollpane>
             </children>
           </grid>
         </children>

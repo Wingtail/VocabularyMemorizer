@@ -1,0 +1,10 @@
+Quiz
+
+We are estimating the time of effective retention through simple square root regression.
+
+Table is stored in desmos.com in sr9074 account.
+    Name: Retention Time Regression
+
+Retention factor depends on average consecutive right answers.
+
+
