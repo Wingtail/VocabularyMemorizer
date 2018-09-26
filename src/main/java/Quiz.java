@@ -18,6 +18,12 @@ public class Quiz {
 
     public boolean checkCorrect(String key)
     {
+        if(currentWord.keywords().length <=0)
+        {
+            System.out.println("No keywords!");
+            return true;
+        }
+
         for(String keyword:currentWord.keywords())
         {
             if(keyword.equals(key))

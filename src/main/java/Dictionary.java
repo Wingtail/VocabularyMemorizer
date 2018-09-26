@@ -5,9 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 public class Dictionary {
     DictionaryElement start;
@@ -16,6 +14,8 @@ public class Dictionary {
     transient JsonEncoder encoder; //prevent stack overflow error
 
     ArrayList<Word> totalWords;
+
+    int threadLimit = 300;
 
     public Dictionary(String name)
     {
@@ -48,21 +48,9 @@ public class Dictionary {
         return null;
     }
 
-    public void addSearch(String word)
-    {
-        if(searchWord(word) != null)
-        {
-            DataScraper scraper = new DataScraper(word, this, false);
-            scraper.start();
-            if(!scraper.isAlive())
-            {
-                addWord(scraper.w);
-            }
-        }
-    }
-
     public void searchWordsInFile(String directory)
     {
+        List<Thread> tempList = new ArrayList<>();
         try {
             File file = new File(directory);
             if(file.exists()) {
@@ -70,27 +58,47 @@ public class Dictionary {
                 String line;
 
                 int count = 0;
-                        while ((line = bufferedReader.readLine()) != null) {
-                            Thread t = new DataScraper(line, this, true);
-                            t.start();
-                            DataScraper.threads.add(t);
-                        }
-                    for(Thread thread:DataScraper.threads)
-                    {
-                        try {
-                            thread.join(200000);
-                        }catch(InterruptedException e)
-                        {
-                            e.printStackTrace();
+                boolean noRead = false;
+                while (!noRead) {
+                    for (count = 0; count < threadLimit; count++) {
+                        if((line = bufferedReader.readLine()) != null) {
+                            Thread thread = new DataScraper(line, this, true);
+                            addWord(((DataScraper)thread).w);
+                            thread.start();
+                            tempList.add(thread);
+                        }else{
+                            noRead = true;
+                            break;
                         }
                     }
 
-                    DataScraper.threads.clear();
+                    for (Thread t : tempList) {
+                        t.join(100000);
+                    }
 
+                    tempList.clear();
+
+                    System.out.println("Mark");
+                }
+
+
+
+                        /*for(Future<Word> future : wordlist)
+                        {
+                            try {
+                                Word word = future.get();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            } catch (ExecutionException e) {
+                                e.printStackTrace();
+                            }
+                        }*/
             }
             save();
         }catch(IOException e)
         {
+            e.printStackTrace();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -168,9 +176,15 @@ public class Dictionary {
         boolean addWord = true;
         for(i =0;i<current.words.size();i++)
         {
-            if(current.words.get(i).getWord().equals(word.getWord()))
+            Word w = current.words.get(i);
+            if(w.getWord().equals(word.getWord()))
             {
                 addWord = false;
+
+                w.setEtymology(word.etymology());
+                w.setDefinitions(word.definitions());
+                w.setKeywords(word.getKeywords());
+
                 break;
             }
         }
@@ -181,36 +195,43 @@ public class Dictionary {
         }
     }
 
-    public Word[] searchWord(String word)
-    {
+    public Word[] searchWord(String word) {
         char[] words = word.toCharArray();
         short i;
         DictionaryElement current = start;
 
-        for(i=0;i<words.length;i++)
-        {
+        List<Callable<Word>> wordList = new ArrayList<>();
+
+        for (i = 0; i < words.length; i++) {
             char index = words[i];
-            if(index > 90)
-            {
+            if (index > 90) {
                 index -= 71;
-            }else{
+            } else {
                 index -= 65;
             }
 
-            if(current.links[index] == null)
-            {
-                return null;
-            }else
-            {
+            if (current.links[index] == null) {
+                break;
+            } else {
                 current = current.links[index];
             }
 
-            if(i == words.length-1)
-            {
+            if (i == words.length - 1) {
                 return current.getWords();
             }
         }
+        Thread thread = new DataScraper(word, this, true);
+        thread.start();
+        try {
+            thread.join(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
-        return null;
+        Word[] w = new Word[1];
+        w[0] = ((DataScraper)thread).w;
+
+
+        return w;
     }
 }

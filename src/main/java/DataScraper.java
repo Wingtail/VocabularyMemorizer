@@ -18,8 +18,9 @@ import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
-public class DataScraper extends Thread{
+public class DataScraper extends Thread {
 
 
     public static void setSSL() {
@@ -94,40 +95,75 @@ public class DataScraper extends Thread{
     public void thesaurus(Word word) {
         int count = 0;
 
-        while(count <= 20) {
-            try {
-                Document doc;
-                doc = Jsoup.connect("http://www.synonymy.com/synonym.php?word=" + word.toString()).userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0")
-                        .referrer("http://www.google.com").timeout(1000 * 10000).ignoreHttpErrors(true).validateTLSCertificates(false).get();
-                if (!doc.toString().contains("no thesaurus results")) {
-                    Elements keywords = doc.select("td.arial-12-noir").clone().select("span").clone();
-                    if (keywords.size() > 0) {
+        String website;
+        Document doc;
+
+        doc = connect("http://www.synonymy.com/synonym.php?word=" + word.toString(), 1000, 20);
+
+        if(doc==null)
+        {
+            doc = connect("https://www.thesaurus.com/browse/"+word.toString()+"?s=t",1000,20);
+            if(doc != null)
+            {
+                website = "thesaurus";
+            }else{
+                return;
+            }
+        }else{
+            website = "synonymy";
+        }
+
+
+        if (website.equals("synonymy") && (doc!=null)&&!doc.toString().contains("no thesaurus results")) {
+            Elements keywords = doc.select("td.arial-12-noir").clone().select("span").clone();
+            if (keywords.size() > 0) {
                     /*for(Element element : keywords) {
                         keywords = element.select("strong").clone();
                     }*/
-                        for (Element element : keywords) {
-                            String[] keys = element.text().split(";\\s|,\\s|:\\s");
-                            for (String string : keys) {
-                                if (!(string.equals("adjective") || string.equals("noun") || string.equals("verb"))) {
-                                    word.addKeyword(string);
-                                }
+                for (Element element : keywords) {
+                    String[] keys = element.text().split(";\\s|,\\s|:\\s");
+                    for (String string : keys) {
+                        if (!(string.equals("adjective") || string.equals("noun") || string.equals("verb"))) {
+                            word.addKeyword(string);
+                        }
+                    }
+                }
+            }else{
+                doc = connect("https://www.thesaurus.com/browse/"+word.toString()+"?s=t",1000,20);
+                if(!doc.toString().contains("no thesaurus results"))
+                {
+                    keywords = doc.select("ul.css-i32syg.e9i53te2").clone();
+                    if(keywords.size() > 0)
+                    {
+                        for(Element element : keywords) {
+                            keywords = element.select("strong").clone();
+                        }
+                        for(Element element : keywords)
+                        {
+                            String[] keys = element.text().split(";\\s|,\\s");
+                            for(String string : keys)
+                            {
+                                word.addKeyword(string);
                             }
                         }
                     }
-                } else {
-                    //System.out.println("Error! No Keywords available!    :   Word: "+word.toString());
                 }
-
-                break;
-
-            } catch(SocketException e)
-            {
-                count++;
             }
-            catch (IOException e) {
-                e.printStackTrace();
-                System.out.println("Exception word: " + word.toString());
-                break;
+        } else if(website.equals("thesaurus")&&!doc.toString().contains("no thesaurus results")){
+            Elements keywords = doc.select("ul.css-i32syg.e9i53te2").clone();
+            if(keywords.size() > 0)
+            {
+                for(Element element : keywords) {
+                    keywords = element.select("strong").clone();
+                }
+                for(Element element : keywords)
+                {
+                    String[] keys = element.text().split(";\\s|,\\s");
+                    for(String string : keys)
+                    {
+                        word.addKeyword(string);
+                    }
+                }
             }
         }
     }
@@ -135,40 +171,18 @@ public class DataScraper extends Thread{
     public void etymology(Word word)
     {
         int count = 0;
+        Document doc = connect("https://www.etymonline.com/search?q=" + word.toString(), 1000, 20);
+        Elements words = doc.select("a.word--C9UPa.word_thumbnail--2DBNk");
+        for (Element element : words) {
+            String str = element.select("p.notranslate.word__name--TTbAA.word_thumbnail__name--1khEg").text().split("\\s")[0];
+            if (str.equals(word.toString())) {
 
-        while(count <= 20) {
-            try {
-                Document doc = Jsoup.connect("https://www.etymonline.com/search?q=" + word.toString()).userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0")
-                        .referrer("http://www.google.com").timeout(1000 * 80).ignoreHttpErrors(true).validateTLSCertificates(false).get();
-                Elements words = doc.select("a.word--C9UPa.word_thumbnail--2DBNk");
-                for (Element element : words) {
-                    String str = element.select("p.notranslate.word__name--TTbAA.word_thumbnail__name--1khEg").text().split("\\s")[0];
-                    if (str.equals(word.toString())) {
-                        int c = 0;
-                        while(c<=20) {
-                            try {
-                                doc = Jsoup.connect(element.attr("abs:href")).userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0")
-                                        .referrer("http://www.google.com").timeout(1000 * 80).ignoreHttpErrors(true).validateTLSCertificates(false).get();
-                                break;
-                            } catch (SocketException e) {
-                                c++;
-                            }
-                        }
-                        //System.out.println("READ "+word.toString());
-                        break;
-                    }
-                }
-                String etymology = doc.select("section.word__defination--2q7ZH").text();
-                word.setEtymology(etymology);
-                break;
-            }catch(SocketException e)
-            {
-                count++;
-            }
-            catch (IOException e) {
-                e.printStackTrace();
+                doc = connect(element.attr("abs:href"), 1000, 20);
+
             }
         }
+        String etymology = doc.select("section.word__defination--2q7ZH").text();
+        word.setEtymology(etymology);
     }
 
     public boolean containsWithinSentence()
@@ -182,56 +196,90 @@ public class DataScraper extends Thread{
         String[] dictionary;
         String[] sentences;
 
-        String actualWord;
         String pronounciation = "";
 
-        try{
-            Document doc = Jsoup.connect("https://www.dictionary.com/browse/"+word.toString()+"?s=t").userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0")
-                    .referrer("http://www.google.com").timeout(1000*10000).ignoreHttpErrors(true).get();
-            actualWord = word.toString();
-            if(doc.select("span.css-1m7ldyv.e6aw9qa0").clone().size() > 0)
-            {
-                String switchWord = doc.selectFirst("h2.css-6gthty.e19m0k9k0").select("a").first().attr("abs:href");
-                doc = Jsoup.connect(switchWord).get();
-            }
-            actualWord = doc.select("section.css-0.e1rg2mtf0").select("h1.css-1qbmdpe.e1rg2mtf5").text().split("\\s|,|;")[0];
 
-            if(doc.select("span.css-1khtv86.e1rg2mtf2").first() != null) {
-                pronounciation = doc.select("span.css-1khtv86.e1rg2mtf2").first().text();
-            }
+        Document doc = connect("https://www.dictionary.com/browse/"+word.toString()+"?s=t", 1000, 10);
+        if(doc.clone().select("span.css-1m7ldyv.e6aw9qa0").size() > 0)
+        {
+            String switchWord = doc.clone().selectFirst("h2.css-6gthty.e19m0k9k0").select("a").first().attr("abs:href");
+            doc = connect(switchWord, 1000, 15);
+        }
+        word.setWord(doc.clone().select("section.css-0.e1rg2mtf0").select("h1.css-1qbmdpe.e1rg2mtf5").text().split("\\s|,|;")[0]);
 
-            Elements masthead = doc.select("section.css-1748arg.e1wu7xq20").clone();
-            List<String> strings = masthead.select("li.css-2oywg7.e10vl5dg5").eachText();
-            dictionary = new String[strings.size()];
-            sentences = new String[strings.size()];
-            for(int i = 0;i<strings.size();i++)
+        if(doc.clone().select("span.css-1khtv86.e1rg2mtf2").first() != null) {
+            pronounciation = doc.clone().select("span.css-1khtv86.e1rg2mtf2").first().text();
+        }
+
+        Elements masthead = doc.clone().select("section.css-1748arg.e1wu7xq20");
+        List<String> strings = masthead.select("li.css-2oywg7.e10vl5dg5").eachText();
+        dictionary = new String[strings.size()];
+        sentences = new String[strings.size()];
+        for(int i = 0;i<strings.size();i++)
+        {
+            String string = strings.get(i);
+            if(string.contains(":")) {
+                dictionary[i] = string.substring(0, string.indexOf(":"));
+                sentences[i] = string.substring(string.indexOf(":") + 1);
+            }else{
+                dictionary[i] = string;
+            }
+        }
+
+        word.pronounciation(pronounciation);
+        word.setDefinitions(dictionary);
+        word.setExampleSentences(sentences);
+
+        /*Elements synonymCandidates = doc.clone().select("section.css-54ces9.e16svm7n0");
+
+        for(Element candidate : synonymCandidates)
+        {
+            if(candidate.toString().contains("Synonym"))
             {
-                String string = strings.get(i);
-                if(string.contains(":")) {
-                    dictionary[i] = string.substring(0, string.indexOf(":"));
-                    sentences[i] = string.substring(string.indexOf(":") + 1);
-                }else{
-                    dictionary[i] = string;
+                String synonyms = doc.select("div.css-1jci32p.e1iz2gwk0").text();
+                synonyms.replaceAll("\\s|.","");
+
+                String[] synonym = synonyms.split(",");
+
+                for(String s : synonym)
+                {
+                    word.addKeyword(s);
                 }
-            }
 
-            word.setWord(actualWord);
-            word.pronounciation(pronounciation);
-            word.setDefinitions(dictionary);
-            word.setExampleSentences(sentences);
-
-            try{
-                out.write(actualWord+"\n");
-                out.write(pronounciation+"\n");
-                out.flush();
-            }catch(IOException e)
-            {
-                e.printStackTrace();
+                break;
             }
+        }*/
+
+        try{
+            out.write(word.toString()+"\n");
+            out.write(pronounciation+"\n");
+            out.flush();
         }catch(IOException e)
         {
             e.printStackTrace();
         }
+    }
+
+    public Document connect(String url, int timeoutsec, int connectionNum)
+    {
+        int count = 0;
+
+        while(count <= connectionNum) {
+            try {
+                return Jsoup.connect(url).userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0")
+                        .referrer("http://www.google.com").timeout(1000 * timeoutsec).ignoreHttpErrors(true).validateTLSCertificates(false).get();
+            }catch(SocketException e)
+            {
+                count++;
+
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+                break;
+            }
+        }
+
+        return null;
     }
 
 }

@@ -5,7 +5,7 @@ import java.io.*;
 import java.util.LinkedList;
 
 public class JsonEncoder {
-    Gson gson;
+    transient Gson gson;
     File save;
     FileWriter writer;
 

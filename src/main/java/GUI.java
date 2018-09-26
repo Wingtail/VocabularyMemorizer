@@ -3,11 +3,14 @@ import javafx.scene.input.KeyCode;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.concurrent.Executors;
 
 public class GUI {
     private JTabbedPane tabbedPane1;
@@ -36,6 +39,8 @@ public class GUI {
     boolean textErase = false;
     Quiz quiz;
 
+
+
     public GUI() {
         dictionary = new Dictionary("standard");
         deditor.setContentType("text/html");
@@ -45,10 +50,18 @@ public class GUI {
 
         dictionary = dictionary.load("standard.dic");
 
+
+
         if(dictionary == null)
         {
             dictionary = new Dictionary("standard");
         }
+
+        dictionary.encoder = new JsonEncoder("standard");
+
+        deditor.setText(renderCandidates(dictionary.searchRelativeWords(dfield.getText())));
+        keyword.setText(renderCandidates(dictionary.searchRelativeWords(kfield.getText())));
+        eeditor.setText(renderCandidates(dictionary.searchRelativeWords(efield.getText())));
 
         quiz = new Quiz(dictionary);
 
@@ -67,12 +80,75 @@ public class GUI {
                     searchWord();
                     dfield.setText("");
                 }
-                else if(!dfield.getText().contains("/")){
-                    System.out.println(dfield.getText());
-                    deditor.setText(renderCandidates(dictionary.searchRelativeWords(dfield.getText())));
-                }
             }
         });
+
+        efield.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                refreshInspector();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                refreshInspector();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                refreshInspector();
+            }
+
+            public void refreshInspector()
+            {
+                eeditor.setText(renderCandidates(dictionary.searchRelativeWords(efield.getText())));
+            }
+        });
+
+        kfield.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                refreshInspector();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                refreshInspector();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                refreshInspector();
+            }
+
+            public void refreshInspector()
+            {
+                keyword.setText(renderCandidates(dictionary.searchRelativeWords(kfield.getText())));
+            }
+        });
+
+        dfield.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                refreshInspector();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                refreshInspector();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                refreshInspector();
+            }
+
+            public void refreshInspector()
+            {
+                deditor.setText(renderCandidates(dictionary.searchRelativeWords(dfield.getText())));
+            }
+        });
+
         dfield.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -188,6 +264,7 @@ public class GUI {
                 }
             }
         });
+
     }
 
     public boolean quizTime(String key)
@@ -424,12 +501,12 @@ public class GUI {
         Word word = null;
 
         Word[] words = dictionary.searchWord(w);
-        if(words != null)
+        if(words != null || words.length <= 0)
         {
             System.out.println("Triggered");
             word = words[0];
         }else{
-            Thread t = new DataScraper(w,dictionary,false);
+            /*Thread t = new DataScraper(w,dictionary,false);
             t.start();
             DataScraper.threads.add(t);
             try {
@@ -440,7 +517,7 @@ public class GUI {
             }
             word = ((DataScraper) t).w;
             System.out.println("Done");
-            DataScraper.threads.remove(t);
+            DataScraper.threads.remove(t);*/
         }
 
         return word;

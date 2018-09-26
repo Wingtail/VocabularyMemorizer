@@ -38,6 +38,16 @@ public class Word {
         return word;
     }
 
+    public void setKeywords(ArrayList<String> keys)
+    {
+        keywords = keys;
+    }
+
+    public ArrayList<String> getKeywords()
+    {
+        return keywords;
+    }
+
     public void pronounciation(String p)
     {
         pronounciation = p;
