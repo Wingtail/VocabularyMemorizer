@@ -9,10 +9,13 @@ public class Quiz {
     boolean activated;
     Word currentWord = null;
 
+    ArrayList<Word> activeWords;
+
     public Quiz(Dictionary dictionary)
     {
         this.dictionary = dictionary;
         activated = false;
+        activeWords = new ArrayList<>();
     }
 
 
@@ -22,6 +25,14 @@ public class Quiz {
         {
             System.out.println("No keywords!");
             return true;
+        }
+
+        if(dictionary.totalWords.contains(currentWord))
+        {
+            activeWords.add(currentWord);
+            while(dictionary.totalWords.contains(currentWord)) {
+                dictionary.totalWords.remove(currentWord);
+            }
         }
 
         for(String keyword:currentWord.keywords())
@@ -74,16 +85,22 @@ public class Quiz {
 
     public void nextWord()
     {
-
-        if(dictionary.totalWords.size() > 0) {
-            quicksort(0,dictionary.totalWords.size()-1,dictionary.totalWords);
-            if(dictionary.totalWords.get(0).time - System.currentTimeMillis() > 0)
+        if(activeWords.size() > 0) {
+            quicksort(0,activeWords.size()-1,activeWords);
+            if(activeWords.get(0).time - System.currentTimeMillis() > 0)
             {
                 currentWord = null;
             }else {
-                currentWord = dictionary.totalWords.get(0);
+                currentWord = activeWords.get(0);
             }
         }
+
+        if(currentWord == null && dictionary.totalWords.size()>0)
+        {
+            currentWord = dictionary.totalWords.get(0);
+        }
+
+        System.out.println("Hello");
     }
 
     public int partition(int l, int r, ArrayList<Word> arr)
@@ -93,11 +110,11 @@ public class Quiz {
         double pivot = arr.get((l+r)/2).time-System.currentTimeMillis();
         while(left<=right)
         {
-            while(arr.get(left).time-System.currentTimeMillis() < pivot && arr.get(left).time != -1)
+            while(arr.get(left).time-System.currentTimeMillis() < pivot)
             {
                 left++;
             }
-            while(arr.get(right).time - System.currentTimeMillis() > pivot && arr.get(right).time == -1)
+            while(arr.get(right).time - System.currentTimeMillis() > pivot)
             {
                 right--;
             }

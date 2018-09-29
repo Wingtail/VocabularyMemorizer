@@ -60,6 +60,14 @@ public class Word {
 
     public void addKeyword(String key)
     {
+        for(String keyword : keywords())
+        {
+            if(keyword.equals(key))
+            {
+                return;
+            }
+        }
+
         keywords.add(key);
     }
 

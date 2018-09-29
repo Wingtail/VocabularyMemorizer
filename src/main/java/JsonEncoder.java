@@ -1,5 +1,6 @@
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 import java.io.*;
 import java.util.LinkedList;
@@ -38,8 +39,11 @@ public class JsonEncoder {
     {
         save = new File(dictionary.name+".dic");
         writer = new FileWriter(save);
-        String json = gson.toJson(dictionary);
-        writer.write(json);
+        StringBuilder builder = new StringBuilder();
+        builder.append(gson.toJson(dictionary.start));
+        builder.append(gson.toJson(dictionary.name));
+        builder.append(gson.toJson(dictionary.totalWords));
+        writer.write(builder.toString());
         writer.flush();
         writer.close();
     }

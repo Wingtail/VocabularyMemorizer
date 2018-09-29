@@ -8,12 +8,12 @@ import java.util.List;
 import java.util.concurrent.*;
 
 public class Dictionary {
-    DictionaryElement start;
-    String name;
+    public DictionaryElement start;
+    public String name;
     int numWords;
     transient JsonEncoder encoder; //prevent stack overflow error
 
-    ArrayList<Word> totalWords;
+    public ArrayList<Word> totalWords;
 
     int threadLimit = 300;
 
@@ -51,6 +51,22 @@ public class Dictionary {
     public void searchWordsInFile(String directory)
     {
         List<Thread> tempList = new ArrayList<>();
+
+        double timeTot = 0.0;
+
+        for(int i=0;i<5;i++)
+        {
+
+            DataScraper s = new DataScraper("", new Dictionary(""), false);
+            timeTot += s.getAverageTime(5);
+            System.out.println("TimeEval");
+        }
+
+
+        double averageTime = timeTot / 5;
+
+        threadLimit = (int)(1000/averageTime);
+
         try {
             File file = new File(directory);
             if(file.exists()) {
@@ -80,9 +96,6 @@ public class Dictionary {
 
                     System.out.println("Mark");
                 }
-
-
-
                         /*for(Future<Word> future : wordlist)
                         {
                             try {

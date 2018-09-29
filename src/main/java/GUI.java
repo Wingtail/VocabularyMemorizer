@@ -1,4 +1,5 @@
 import javafx.scene.input.KeyCode;
+import org.jsoup.Jsoup;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -76,7 +77,7 @@ public class GUI {
                 if(e.getKeyChar() == KeyEvent.VK_ENTER)
                 {
                     command = dfield.getText();
-                    deditor.setText("<html></html>");
+                    //deditor.setText("<html></html>");
                     searchWord();
                     dfield.setText("");
                 }
@@ -101,7 +102,10 @@ public class GUI {
 
             public void refreshInspector()
             {
-                eeditor.setText(renderCandidates(dictionary.searchRelativeWords(efield.getText())));
+                String string = efield.getText().replaceAll("\\s|\\|/|\'|\"", "");
+                if((string != null) && !string.equals("")) {
+                    eeditor.setText(renderCandidates(dictionary.searchRelativeWords(string)));
+                }
             }
         });
 
@@ -123,7 +127,10 @@ public class GUI {
 
             public void refreshInspector()
             {
-                keyword.setText(renderCandidates(dictionary.searchRelativeWords(kfield.getText())));
+                String string = kfield.getText().replaceAll("\\s|\\|/|\'|\"", "");
+                if((string != null) && !string.equals("")) {
+                    keyword.setText(renderCandidates(dictionary.searchRelativeWords(string)));
+                }
             }
         });
 
@@ -145,7 +152,10 @@ public class GUI {
 
             public void refreshInspector()
             {
-                deditor.setText(renderCandidates(dictionary.searchRelativeWords(dfield.getText())));
+                String string = dfield.getText().replaceAll("\\s|\\|/|\'|\"", "");
+                if((string != null) && !string.equals("")) {
+                    deditor.setText(renderCandidates(dictionary.searchRelativeWords(string)));
+                }
             }
         });
 
@@ -336,6 +346,7 @@ public class GUI {
                 JFileChooser chooser = new JFileChooser();
                 chooser.setCurrentDirectory(new File("."));
                 int returnval = chooser.showOpenDialog(null);
+
                 if(returnval == JFileChooser.APPROVE_OPTION) {
                     prompt.append("Retrieving file..\n");
                     dictionary.searchWordsInFile(chooser.getSelectedFile().getPath());

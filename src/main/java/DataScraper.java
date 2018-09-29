@@ -64,6 +64,8 @@ public class DataScraper extends Thread {
     BufferedWriter out;
     boolean save = true;
 
+    public double averageTime;
+
     public DataScraper(String word, Dictionary dictionary, boolean autosave)
     {
         //this.word = word;
@@ -88,7 +90,6 @@ public class DataScraper extends Thread {
         etymology(w);
         if(save) {
             dictionary.addWord(w);
-            dictionary.totalWords.add(w);
         }
     }
 
@@ -144,6 +145,7 @@ public class DataScraper extends Thread {
                             for(String string : keys)
                             {
                                 word.addKeyword(string);
+
                             }
                         }
                     }
@@ -280,6 +282,19 @@ public class DataScraper extends Thread {
         }
 
         return null;
+    }
+
+    public double getAverageTime(int number)
+    {
+        double timeTot = 0.0;
+        for(int i=0;i<number;i++)
+        {
+            long initTime = System.currentTimeMillis();
+            connect("https://www.dictionary.com/", 100, 0);
+            averageTime += ((System.currentTimeMillis() - initTime)/1000);
+        }
+
+        return averageTime/number;
     }
 
 }
