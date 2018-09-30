@@ -6,6 +6,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.*;
@@ -32,6 +33,13 @@ public class GUI {
     private JTextField console;
     private JTextArea prompt;
 
+    JMenuBar menuBar = new JMenuBar();
+    JMenu fileMenu = new JMenu("File");
+    JMenuItem loadDictionary = new JMenuItem("Load Dictionary");
+    JMenuItem loadWordList = new JMenuItem("Load Wordlist");
+    JMenuItem saveDictionary = new JMenuItem("Save Dictionary");
+    JMenuItem toggleAutoSave = new JMenuItem("Toggle Autosave");
+
     Word currentWord;
 
     String command;
@@ -48,10 +56,6 @@ public class GUI {
         eeditor.setContentType("text/html");
         keyword.setContentType("text/html");
         QuizEditor.setContentType("text/html");
-
-        dictionary = dictionary.load("standard.dic");
-
-
 
         if(dictionary == null)
         {
@@ -83,6 +87,87 @@ public class GUI {
                 }
             }
         });
+
+         loadDictionary.addActionListener(new ActionListener() {
+             @Override
+             public void actionPerformed(ActionEvent e) {
+                 JFileChooser chooser = new JFileChooser();
+                 chooser.setCurrentDirectory(new File("."));
+
+                 chooser.setFileFilter(new FileFilter() {
+
+                     public String getDescription() {
+                         return "DIC Images (*.dic)";
+                     }
+
+                     public boolean accept(File f) {
+                         if (f.isDirectory()) {
+                             return true;
+                         } else {
+                             String filename = f.getName().toLowerCase();
+                             return filename.endsWith(".dic");
+                         }
+                     }
+                 });
+
+                 int returnval = chooser.showOpenDialog(null);
+
+                 if(returnval == JFileChooser.APPROVE_OPTION) {
+                     prompt.append("Retrieving file..\n");
+                     dictionary = dictionary.load(chooser.getSelectedFile().getPath());
+                     quiz.dictionary = dictionary;
+                     prompt.append(dictionary.name+" loaded! Words: "+dictionary.numWords+"\n");
+                     prompt.append("Complete!\n");
+                 }
+             }
+         });
+
+         loadWordList.addActionListener(new ActionListener() {
+             @Override
+             public void actionPerformed(ActionEvent e) {
+                 JFileChooser chooser = new JFileChooser();
+                 chooser.setCurrentDirectory(new File("."));
+
+                 chooser.setFileFilter(new FileFilter() {
+
+                     public String getDescription() {
+                         return "TXT Files (*.txt)";
+                     }
+
+                     public boolean accept(File f) {
+                         if (f.isDirectory()) {
+                             return true;
+                         } else {
+                             String filename = f.getName().toLowerCase();
+                             return filename.endsWith(".txt");
+                         }
+                     }
+                 });
+                 int returnval = chooser.showOpenDialog(null);
+
+                 if(returnval == JFileChooser.APPROVE_OPTION) {
+                     prompt.append("Retrieving file..\n");
+                     dictionary.searchWordsInFile(chooser.getSelectedFile().getPath());
+                     prompt.append("Complete!\n");
+                 }
+             }
+         });
+
+         saveDictionary.addActionListener(new ActionListener() {
+             @Override
+             public void actionPerformed(ActionEvent e) {
+                 JFileChooser chooser = new JFileChooser();
+                 chooser.setCurrentDirectory(new File("."));
+                 int returnval = chooser.showSaveDialog(null);
+
+                 if(returnval == JFileChooser.APPROVE_OPTION) {
+
+                     dictionary.name = chooser.getSelectedFile().getName();
+                     System.out.println(chooser.getCurrentDirectory().toString());
+                     dictionary.save(chooser.getCurrentDirectory().toString()+dictionary.name+".dic");
+                 }
+             }
+         });
 
         efield.getDocument().addDocumentListener(new DocumentListener() {
             @Override
@@ -363,7 +448,7 @@ public class GUI {
                 {
                     dictionary.name = command.substring(command.indexOf(" "));
                 }
-                dictionary.save();
+                dictionary.save("");
                 prompt.append(dictionary.name+" saved! Words: "+dictionary.numWords+"\n");
 
             }
@@ -535,12 +620,23 @@ public class GUI {
     }
 
     public static void main(String[] args) {
+        GUI gui = new GUI();
+
         JFrame frame = new JFrame("GUI");
-        frame.setContentPane(new GUI().mainPanel);
+        frame.setContentPane(gui.mainPanel);
+
+        gui.menuBar.add(gui.fileMenu);
+        gui.fileMenu.add(gui.loadDictionary);
+        gui.fileMenu.add(gui.loadWordList);
+        gui.fileMenu.add(gui.saveDictionary);
+        gui.fileMenu.add(gui.toggleAutoSave);
+        frame.setJMenuBar(gui.menuBar);
         frame.setPreferredSize(new Dimension(1000,600));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
+
+
     }
 
     private void createUIComponents() {

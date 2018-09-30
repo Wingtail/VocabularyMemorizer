@@ -145,7 +145,6 @@ public class DataScraper extends Thread {
                             for(String string : keys)
                             {
                                 word.addKeyword(string);
-
                             }
                         }
                     }

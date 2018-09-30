@@ -1,7 +1,4 @@
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -15,7 +12,7 @@ public class Dictionary {
 
     public ArrayList<Word> totalWords;
 
-    int threadLimit = 300;
+    int threadLimit = 100;
 
     public Dictionary(String name)
     {
@@ -24,13 +21,13 @@ public class Dictionary {
         numWords = 0;
         encoder = new JsonEncoder(name);
 
-        totalWords = new ArrayList<Word>();
+        totalWords = new ArrayList<>();
     }
 
-    public void save()
+    public void save(String dir)
     {
         try {
-            encoder.save(this);
+            encoder.save(this, dir);
         }catch(IOException e)
         {
             e.printStackTrace();
@@ -52,7 +49,7 @@ public class Dictionary {
     {
         List<Thread> tempList = new ArrayList<>();
 
-        double timeTot = 0.0;
+        /*double timeTot = 0.0;
 
         for(int i=0;i<5;i++)
         {
@@ -65,12 +62,19 @@ public class Dictionary {
 
         double averageTime = timeTot / 5;
 
-        threadLimit = (int)(1000/averageTime);
+        threadLimit = (int)(1000/averageTime);*/
 
         try {
             File file = new File(directory);
+            BufferedReader bufferedReader;
             if(file.exists()) {
-                BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+                //check # of lines
+
+                bufferedReader = new BufferedReader(new FileReader(file));
+
+
+                bufferedReader.close();
+                bufferedReader = new BufferedReader(new FileReader(file));
                 String line;
 
                 int count = 0;
@@ -96,6 +100,8 @@ public class Dictionary {
 
                     System.out.println("Mark");
                 }
+
+                bufferedReader.close();
                         /*for(Future<Word> future : wordlist)
                         {
                             try {
@@ -107,7 +113,7 @@ public class Dictionary {
                             }
                         }*/
             }
-            save();
+            //save("");
         }catch(IOException e)
         {
             e.printStackTrace();
@@ -146,6 +152,45 @@ public class Dictionary {
         }
 
         return null;
+    }
+
+    public int readNumLines(BufferedReader reader)
+    {
+        try {
+            byte[] c = new byte[1024];
+
+            //int readChars = reader.read();
+            if (readChars == -1) {
+                // bail out if nothing to read
+                return 0;
+            }
+
+            // make it easy for the optimizer to tune this loop
+            int count = 0;
+            while (readChars == 1024) {
+                for (int i=0; i<1024;) {
+                    if (c[i++] == '\n') {
+                        ++count;
+                    }
+                }
+                readChars = is.read(c);
+            }
+
+            // count remaining characters
+            while (readChars != -1) {
+                System.out.println(readChars);
+                for (int i=0; i<readChars; ++i) {
+                    if (c[i] == '\n') {
+                        ++count;
+                    }
+                }
+                readChars = is.read(c);
+            }
+
+            return count == 0 ? 1 : count;
+        } finally {
+            is.close();
+        }
     }
 
     public ArrayList<Word> searchAllWords(DictionaryElement element, ArrayList<Word> words)

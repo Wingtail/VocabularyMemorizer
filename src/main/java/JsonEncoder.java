@@ -1,8 +1,11 @@
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.*;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class JsonEncoder {
@@ -31,13 +34,20 @@ public class JsonEncoder {
             builder.append(line);
         }
 
-        Dictionary dictionary = gson.fromJson(builder.toString(),Dictionary.class);
+        Dictionary dictionary = new Dictionary("");
+
+
+        JsonObject jobj = new Gson().fromJson(builder.toString(), JsonObject.class);
+        dictionary.name = jobj.get("name").toString();
+        dictionary.start = new Gson().fromJson(builder.toString(), new TypeToken<DictionaryElement>(){}.getType());
+        dictionary.totalWords = new Gson().fromJson(builder.toString(), new TypeToken<ArrayList<Word>>(){}.getType());
+
         return dictionary;
     }
 
-    public void save(Dictionary dictionary) throws IOException
+    public void save(Dictionary dictionary, String dir) throws IOException
     {
-        save = new File(dictionary.name+".dic");
+        save = new File(dir);
         writer = new FileWriter(save);
         StringBuilder builder = new StringBuilder();
         builder.append(gson.toJson(dictionary.start));

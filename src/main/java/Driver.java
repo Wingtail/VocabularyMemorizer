@@ -11,7 +11,7 @@ public class Driver {
         Dictionary dictionary = new Dictionary("Test");
         dictionary.searchWordsInFile("data/Words.txt");
         System.out.println("Complete");
-        dictionary.save();
+        dictionary.save("");
         /*DictionaryElement element = new DictionaryElement('0');
         element.makeMaster();
         System.out.println("YAY");*/
