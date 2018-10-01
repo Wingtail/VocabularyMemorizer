@@ -19,22 +19,18 @@
             <properties/>
             <border type="none"/>
             <children>
-              <component id="59580" class="javax.swing.JTextField" binding="console">
+              <component id="222d7" class="javax.swing.JProgressBar" binding="consoleProgress">
                 <constraints border-constraint="South"/>
-                <properties>
-                  <editable value="true"/>
-                </properties>
+                <properties/>
               </component>
-              <scrollpane id="c0fbd">
+              <scrollpane id="6002c">
                 <constraints border-constraint="Center"/>
                 <properties/>
                 <border type="none"/>
                 <children>
-                  <component id="bb9da" class="javax.swing.JTextArea" binding="prompt">
+                  <component id="fa2a8" class="javax.swing.JTextArea" binding="prompt">
                     <constraints/>
-                    <properties>
-                      <editable value="false"/>
-                    </properties>
+                    <properties/>
                   </component>
                 </children>
               </scrollpane>

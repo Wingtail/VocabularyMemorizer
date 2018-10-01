@@ -8,6 +8,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.text.BadLocationException;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
@@ -23,15 +24,17 @@ public class GUI {
     private JPanel Practise;
     private JTextField efield;
     private JTextField kfield;
-    private JTextField pfield;
+    public JTextField pfield;
     private JTextField dfield;
     private JEditorPane eeditor;
     private JEditorPane deditor;
     private JEditorPane keyword;
-    private JEditorPane QuizEditor;
+    public JEditorPane QuizEditor;
     private JPanel Console;
-    private JTextField console;
-    private JTextArea prompt;
+    public JProgressBar consoleProgress;
+    public JTextArea prompt;
+
+    JFileChooser chooser;
 
     JMenuBar menuBar = new JMenuBar();
     JMenu fileMenu = new JMenu("File");
@@ -51,15 +54,17 @@ public class GUI {
 
 
     public GUI() {
-        dictionary = new Dictionary("standard");
+        dictionary = new Dictionary("standard", this);
         deditor.setContentType("text/html");
         eeditor.setContentType("text/html");
         keyword.setContentType("text/html");
         QuizEditor.setContentType("text/html");
 
+
+
         if(dictionary == null)
         {
-            dictionary = new Dictionary("standard");
+            dictionary = new Dictionary("standard", this);
         }
 
         dictionary.encoder = new JsonEncoder("standard");
@@ -69,6 +74,37 @@ public class GUI {
         eeditor.setText(renderCandidates(dictionary.searchRelativeWords(efield.getText())));
 
         quiz = new Quiz(dictionary);
+
+        prompt.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                manageDocumentflow();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                manageDocumentflow();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                manageDocumentflow();
+            }
+
+            public void manageDocumentflow()
+            {
+                if(prompt.getDocument().getLength() > 1000)
+                {
+                    try {
+                        prompt.getDocument().remove(0,prompt.getDocument().getLength()-1000);
+                    } catch (BadLocationException e) {
+                        e.printStackTrace();
+                    }
+                }
+                prompt.setCaretPosition(prompt.getDocument().getLength());
+            }
+
+        });
 
         dfield.addKeyListener(new KeyAdapter() {
             @Override
@@ -125,7 +161,7 @@ public class GUI {
          loadWordList.addActionListener(new ActionListener() {
              @Override
              public void actionPerformed(ActionEvent e) {
-                 JFileChooser chooser = new JFileChooser();
+                 chooser = new JFileChooser();
                  chooser.setCurrentDirectory(new File("."));
 
                  chooser.setFileFilter(new FileFilter() {
@@ -147,8 +183,16 @@ public class GUI {
 
                  if(returnval == JFileChooser.APPROVE_OPTION) {
                      prompt.append("Retrieving file..\n");
-                     dictionary.searchWordsInFile(chooser.getSelectedFile().getPath());
-                     prompt.append("Complete!\n");
+
+                     Thread thread = new Thread(new Runnable() {
+                         @Override
+                         public void run() {
+                             dictionary.searchWordsInFile(chooser.getSelectedFile().getPath());
+                             prompt.append("Complete!\n");
+                         }
+                     });
+
+                     thread.start();
                  }
              }
          });
@@ -340,22 +384,6 @@ public class GUI {
                 }else if(quiz.currentWord == null)
                 {
                     quiz.activated = false;
-                }
-            }
-        });
-        console.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-                if(textErase)
-                {
-                    console.setText("");
-                    textErase = false;
-                }
-                if(e.getKeyChar() == KeyEvent.VK_ENTER)
-                {
-                    command = console.getText();
-                    executeCommand();
-                    textErase = true;
                 }
             }
         });

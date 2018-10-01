@@ -12,16 +12,31 @@ public class Dictionary {
 
     public ArrayList<Word> totalWords;
 
-    int threadLimit = 100;
+    public ArrayList<String> wordQeue;
 
-    public Dictionary(String name)
+    GUI gui;
+
+    long threadLimit = 100;
+
+    public Dictionary(String name, GUI gui)
     {
         this.name = name;
         start = new DictionaryElement('\0');
         numWords = 0;
         encoder = new JsonEncoder(name);
 
+        wordQeue = new ArrayList<String>();
+
         totalWords = new ArrayList<>();
+
+        this.gui = gui;
+
+        long startTime = System.currentTimeMillis();
+        DataScraper scrape = new DataScraper("apple", this, false);
+        scrape.dummy = true;
+        scrape.run();
+        double timeTook = ((double)(System.currentTimeMillis() - startTime))/1000;
+        threadLimit = Math.round((15/timeTook));
     }
 
     public void save(String dir)
@@ -37,7 +52,7 @@ public class Dictionary {
     public Dictionary load(String dir)
     {
         try {
-            return encoder.load(dir);
+            return encoder.load(dir, gui);
         }catch(IOException e)
         {
             e.printStackTrace();
@@ -72,6 +87,7 @@ public class Dictionary {
 
                 bufferedReader = new BufferedReader(new FileReader(file));
 
+                gui.consoleProgress.setMaximum(readNumLines(bufferedReader));
 
                 bufferedReader.close();
                 bufferedReader = new BufferedReader(new FileReader(file));
@@ -83,7 +99,6 @@ public class Dictionary {
                     for (count = 0; count < threadLimit; count++) {
                         if((line = bufferedReader.readLine()) != null) {
                             Thread thread = new DataScraper(line, this, true);
-                            addWord(((DataScraper)thread).w);
                             thread.start();
                             tempList.add(thread);
                         }else{
@@ -96,12 +111,48 @@ public class Dictionary {
                         t.join(100000);
                     }
 
+                    for(Thread t : tempList)
+                    {
+                        if(!((DataScraper)t).interrupted) {
+                            addWord(((DataScraper) t).w);
+                        }
+                    }
+
                     tempList.clear();
 
                     System.out.println("Mark");
                 }
 
+                while(wordQeue.size() > 0)
+                {
+                    for (count = 0; count < threadLimit; count++) {
+                        if(wordQeue.size() > 0) {
+                            Thread thread = new DataScraper(wordQeue.get(wordQeue.size() - 1), this, true);
+                            thread.start();
+                            tempList.add(thread);
+                            wordQeue.remove(wordQeue.size() - 1);
+                        }else{
+                            break;
+                        }
+                    }
+
+                    for (Thread t : tempList) {
+                        t.join(100000);
+                    }
+
+                    for(Thread t : tempList)
+                    {
+                        if(!((DataScraper)t).interrupted) {
+                            addWord(((DataScraper) t).w);
+                        }
+                    }
+
+                    tempList.clear();
+                }
+
                 bufferedReader.close();
+
+                gui.consoleProgress.setValue(0);
                         /*for(Future<Word> future : wordlist)
                         {
                             try {
@@ -139,7 +190,8 @@ public class Dictionary {
                 } else {
                     index -= 65;
                 }
-                System.out.println(words[i]);
+
+                //gui.prompt.append(words[i]+"\n");
                 if (current.links[index] != null) {
                     current = current.links[index];
                 }
@@ -156,41 +208,18 @@ public class Dictionary {
 
     public int readNumLines(BufferedReader reader)
     {
-        try {
-            byte[] c = new byte[1024];
-
-            //int readChars = reader.read();
-            if (readChars == -1) {
-                // bail out if nothing to read
-                return 0;
+        int count = 0;
+        try{
+            while((reader.readLine()) != null)
+            {
+                count++;
             }
-
-            // make it easy for the optimizer to tune this loop
-            int count = 0;
-            while (readChars == 1024) {
-                for (int i=0; i<1024;) {
-                    if (c[i++] == '\n') {
-                        ++count;
-                    }
-                }
-                readChars = is.read(c);
-            }
-
-            // count remaining characters
-            while (readChars != -1) {
-                System.out.println(readChars);
-                for (int i=0; i<readChars; ++i) {
-                    if (c[i] == '\n') {
-                        ++count;
-                    }
-                }
-                readChars = is.read(c);
-            }
-
-            return count == 0 ? 1 : count;
-        } finally {
-            is.close();
+        }catch (IOException e)
+        {
+            e.printStackTrace();
         }
+
+        return count;
     }
 
     public ArrayList<Word> searchAllWords(DictionaryElement element, ArrayList<Word> words)

@@ -62,7 +62,9 @@ public class DataScraper extends Thread {
     static List<Thread> threads = new ArrayList<Thread>();
     Dictionary dictionary;
     BufferedWriter out;
+    boolean interrupted = false;
     boolean save = true;
+    boolean dummy = false;
 
     public double averageTime;
 
@@ -88,8 +90,9 @@ public class DataScraper extends Thread {
         dictionary(w);
         thesaurus(w);
         etymology(w);
-        if(save) {
-            dictionary.addWord(w);
+
+        if(!interrupted && !dummy) {
+            dictionary.gui.consoleProgress.setValue(dictionary.gui.consoleProgress.getValue() + 1);
         }
     }
 
@@ -252,9 +255,12 @@ public class DataScraper extends Thread {
         }*/
 
         try{
-            out.write(word.toString()+"\n");
-            out.write(pronounciation+"\n");
-            out.flush();
+            if(!dummy) {
+                this.dictionary.gui.prompt.append(word.toString() + "\n" + pronounciation + "\n");
+                out.write(word.toString() + "\n");
+                out.write(pronounciation + "\n");
+                out.flush();
+            }
         }catch(IOException e)
         {
             e.printStackTrace();
@@ -276,6 +282,10 @@ public class DataScraper extends Thread {
             }
             catch (IOException e) {
                 e.printStackTrace();
+                dictionary.wordQeue.add(w.toString());
+                this.interrupt();
+                interrupted = true;
+                dictionary.gui.prompt.append("Thread was interrupted");
                 break;
             }
         }

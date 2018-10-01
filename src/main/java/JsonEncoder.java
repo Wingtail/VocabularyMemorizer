@@ -2,6 +2,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
 
 import java.io.*;
 import java.lang.reflect.Type;
@@ -20,7 +21,7 @@ public class JsonEncoder {
         save = new File(name+".dic");
     }
 
-    public Dictionary load(String dir) throws IOException
+    public Dictionary load(String dir, GUI gui) throws IOException
     {
         if(!save.exists())
         {
@@ -34,13 +35,18 @@ public class JsonEncoder {
             builder.append(line);
         }
 
-        Dictionary dictionary = new Dictionary("");
+        Dictionary dictionary = new Dictionary("", gui);
 
 
-        JsonObject jobj = new Gson().fromJson(builder.toString(), JsonObject.class);
-        dictionary.name = jobj.get("name").toString();
-        dictionary.start = new Gson().fromJson(builder.toString(), new TypeToken<DictionaryElement>(){}.getType());
-        dictionary.totalWords = new Gson().fromJson(builder.toString(), new TypeToken<ArrayList<Word>>(){}.getType());
+        JsonReader reader = new JsonReader(new StringReader(builder.toString()));
+        reader.setLenient(true);
+
+
+        dictionary.start = new Gson().fromJson(reader, new TypeToken<DictionaryElement>(){}.getType());
+        dictionary.name = new Gson().fromJson(reader, new TypeToken<String>(){}.getType());
+        dictionary.totalWords = new Gson().fromJson(reader, new TypeToken<ArrayList<Word>>(){}.getType());
+        dictionary.numWords = new Gson().fromJson(reader, new TypeToken<Integer>(){}.getType());
+
 
         return dictionary;
     }
@@ -53,6 +59,7 @@ public class JsonEncoder {
         builder.append(gson.toJson(dictionary.start));
         builder.append(gson.toJson(dictionary.name));
         builder.append(gson.toJson(dictionary.totalWords));
+        builder.append(gson.toJson(dictionary.numWords));
         writer.write(builder.toString());
         writer.flush();
         writer.close();
