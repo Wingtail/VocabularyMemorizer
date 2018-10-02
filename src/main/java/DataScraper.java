@@ -65,6 +65,7 @@ public class DataScraper extends Thread {
     boolean interrupted = false;
     boolean save = true;
     boolean dummy = false;
+    boolean complete = false;
 
     public double averageTime;
 
@@ -93,6 +94,7 @@ public class DataScraper extends Thread {
 
         if(!interrupted && !dummy) {
             dictionary.gui.consoleProgress.setValue(dictionary.gui.consoleProgress.getValue() + 1);
+            complete = true;
         }
     }
 
@@ -209,7 +211,8 @@ public class DataScraper extends Thread {
             String switchWord = doc.clone().selectFirst("h2.css-6gthty.e19m0k9k0").select("a").first().attr("abs:href");
             doc = connect(switchWord, 1000, 15);
         }
-        word.setWord(doc.clone().select("section.css-0.e1rg2mtf0").select("h1.css-1qbmdpe.e1rg2mtf5").text().split("\\s|,|;")[0]);
+
+        word.setWord(doc.clone().select("section.css-0.e1rg2mtf0").select("h1.css-urzbm0.e1rg2mtf5").text().split("\\s|,|;")[0]);
 
         if(doc.clone().select("span.css-1khtv86.e1rg2mtf2").first() != null) {
             pronounciation = doc.clone().select("span.css-1khtv86.e1rg2mtf2").first().text();

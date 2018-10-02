@@ -16,7 +16,7 @@ public class Dictionary {
 
     GUI gui;
 
-    long threadLimit = 100;
+    long threadLimit = 200;
 
     public Dictionary(String name, GUI gui)
     {
@@ -30,13 +30,6 @@ public class Dictionary {
         totalWords = new ArrayList<>();
 
         this.gui = gui;
-
-        long startTime = System.currentTimeMillis();
-        DataScraper scrape = new DataScraper("apple", this, false);
-        scrape.dummy = true;
-        scrape.run();
-        double timeTook = ((double)(System.currentTimeMillis() - startTime))/1000;
-        threadLimit = Math.round((15/timeTook));
     }
 
     public void save(String dir)
@@ -113,8 +106,13 @@ public class Dictionary {
 
                     for(Thread t : tempList)
                     {
-                        if(!((DataScraper)t).interrupted) {
-                            addWord(((DataScraper) t).w);
+                        try {
+                            if (!((DataScraper) t).interrupted) {
+                                addWord(((DataScraper) t).w);
+                            }
+                        }catch(ArrayIndexOutOfBoundsException e)
+                        {
+                            continue;
                         }
                     }
 
@@ -127,10 +125,9 @@ public class Dictionary {
                 {
                     for (count = 0; count < threadLimit; count++) {
                         if(wordQeue.size() > 0) {
-                            Thread thread = new DataScraper(wordQeue.get(wordQeue.size() - 1), this, true);
+                            Thread thread = new DataScraper(wordQeue.remove(wordQeue.size() - 1), this, true);
                             thread.start();
                             tempList.add(thread);
-                            wordQeue.remove(wordQeue.size() - 1);
                         }else{
                             break;
                         }
@@ -287,8 +284,6 @@ public class Dictionary {
         short i;
         DictionaryElement current = start;
 
-        List<Callable<Word>> wordList = new ArrayList<>();
-
         for (i = 0; i < words.length; i++) {
             char index = words[i];
             if (index > 90) {
@@ -297,11 +292,13 @@ public class Dictionary {
                 index -= 65;
             }
 
-            if (current.links[index] == null) {
-                break;
-            } else {
-                current = current.links[index];
-            }
+
+                if (current.links[index] == null) {
+                    break;
+                } else {
+                    current = current.links[index];
+                }
+
 
             if (i == words.length - 1) {
                 return current.getWords();
@@ -310,7 +307,7 @@ public class Dictionary {
         Thread thread = new DataScraper(word, this, true);
         thread.start();
         try {
-            thread.join(1000);
+            thread.join(100000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

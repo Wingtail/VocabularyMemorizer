@@ -2,33 +2,31 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class Driver {
 
     public static void main(String[] args)
     {
-        //new DataScraper("at",new Dictionary()).run();
-        /*Dictionary dictionary = new Dictionary("Test");
-        dictionary.searchWordsInFile("data/Words.txt");
-        System.out.println("Complete");
-        dictionary.save("");
-        /*DictionaryElement element = new DictionaryElement('0');
-        element.makeMaster();
-        System.out.println("YAY");*/
-        /*try {
-            File file = new File("data/Words.txt");
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
-            String line;
-
-            int count = 0;
-
-            while((line = bufferedReader.readLine())!=null)
-            {
-                new DataScraper().run(line);
+        for(int j = 10;j < 100; j+=10) {
+            ArrayList<Thread> threads = new ArrayList<Thread>();
+            long startTime = System.currentTimeMillis();
+            for (int i = 0; i < j; i++) {
+                DataScraper scrape = new DataScraper("apple", new Dictionary("", new GUI()), false);
+                scrape.dummy = true;
+                scrape.start();
+                threads.add(scrape);
             }
-        }catch(IOException e)
-        {
-            e.printStackTrace();
-        }*/
+
+            for (Thread thread : threads) {
+                try {
+                    thread.join(100000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            double timeTook = ((double) (System.currentTimeMillis() - startTime)) / 1000;
+            System.out.println(timeTook);
+        }
     }
 }

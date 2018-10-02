@@ -99,8 +99,6 @@ public class Quiz {
         {
             currentWord = dictionary.totalWords.get(0);
         }
-
-        System.out.println("Hello");
     }
 
     public int partition(int l, int r, ArrayList<Word> arr)

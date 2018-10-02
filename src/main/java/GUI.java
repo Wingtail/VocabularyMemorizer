@@ -47,7 +47,7 @@ public class GUI {
 
     String command;
     Dictionary dictionary;
-    boolean autosave = false;
+    boolean autosave = true;
     boolean textErase = false;
     Quiz quiz;
 
@@ -93,14 +93,6 @@ public class GUI {
 
             public void manageDocumentflow()
             {
-                if(prompt.getDocument().getLength() > 1000)
-                {
-                    try {
-                        prompt.getDocument().remove(0,prompt.getDocument().getLength()-1000);
-                    } catch (BadLocationException e) {
-                        e.printStackTrace();
-                    }
-                }
                 prompt.setCaretPosition(prompt.getDocument().getLength());
             }
 
@@ -650,7 +642,7 @@ public class GUI {
     public static void main(String[] args) {
         GUI gui = new GUI();
 
-        JFrame frame = new JFrame("GUI");
+        JFrame frame = new JFrame("VocabAssistant");
         frame.setContentPane(gui.mainPanel);
 
         gui.menuBar.add(gui.fileMenu);
