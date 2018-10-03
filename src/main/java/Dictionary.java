@@ -161,6 +161,7 @@ public class Dictionary {
                             }
                         }*/
             }
+
             //save("");
         }catch(IOException e)
         {
@@ -222,6 +223,7 @@ public class Dictionary {
     public ArrayList<Word> searchAllWords(DictionaryElement element, ArrayList<Word> words)
     {
         words.addAll(element.words);
+        numWords += element.words.size();
         for(DictionaryElement e : element.links)
         {
             if(e != null)
@@ -273,8 +275,8 @@ public class Dictionary {
             }
         }
         if(addWord) {
-            totalWords.add(word);
-            numWords++;
+            //totalWords.add(word);
+            //numWords++;
             current.words.add(word);
         }
     }

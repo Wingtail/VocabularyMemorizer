@@ -6,7 +6,27 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f2c65683-2821-4b4b-b87f-fcb742bd6715" name="Default" comment="" />
+    <list default="true" id="f2c65683-2821-4b4b-b87f-fcb742bd6715" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Dictionary.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Dictionary.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/GUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/GUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Quiz.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Quiz.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Word.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Word.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/DataScraper.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/DataScraper.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/Dictionary.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Dictionary.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/GUI$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/GUI$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/GUI$15.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/GUI$15.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/GUI$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/GUI$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/GUI$3$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/GUI$3$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/GUI$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/GUI$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/GUI$4$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/GUI$4$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/GUI$4$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/GUI$4$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/GUI$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/GUI$4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/GUI$5.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/GUI$5.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/GUI.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/GUI.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/Quiz.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Quiz.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/Word.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Word.class" afterDir="false" />
+    </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -20,11 +40,30 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="Dictionary.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/Dictionary.java">
+      <file leaf-file-name="GUI.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/GUI.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="289">
-              <caret line="300" selection-start-line="300" selection-end-line="300" />
+            <state relative-caret-position="-4008">
+              <caret line="365" column="16" lean-forward="true" selection-start-line="365" selection-start-column="16" selection-end-line="365" selection-end-column="16" />
+              <folding>
+                <element signature="e#12574#14101#0" expanded="true" />
+                <element signature="e#14100#14101#0" expanded="true" />
+                <element signature="e#14234#14235#0" expanded="true" />
+                <element signature="e#14279#14280#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Word.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/Word.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="202">
+              <caret line="19" column="27" selection-start-line="19" selection-start-column="19" selection-end-line="19" selection-end-column="27" />
+              <folding>
+                <element signature="e#738#739#0" expanded="true" />
+                <element signature="e#765#766#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -32,96 +71,31 @@
       <file leaf-file-name="JsonEncoder.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/JsonEncoder.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="297">
-              <caret line="45" column="65" selection-start-line="45" selection-start-column="65" selection-end-line="45" selection-end-column="65" />
+            <state relative-caret-position="176">
+              <caret line="53" column="54" selection-start-line="53" selection-start-column="51" selection-end-line="53" selection-end-column="54" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Dictionary.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/Dictionary.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="176">
+              <caret line="37" column="24" selection-start-line="37" selection-start-column="20" selection-end-line="37" selection-end-column="24" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
             </state>
           </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="GUI.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/GUI.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2254">
-              <caret line="640" lean-forward="true" selection-start-line="640" selection-end-line="640" />
-              <folding>
-                <element signature="e#2495#2496#0" expanded="true" />
-                <element signature="e#2547#2548#0" expanded="true" />
-                <element signature="e#2626#2627#0" expanded="true" />
-                <element signature="e#2678#2679#0" expanded="true" />
-                <element signature="e#2758#2759#0" expanded="true" />
-                <element signature="e#2810#2811#0" expanded="true" />
-                <element signature="e#2867#2868#0" expanded="true" />
-                <element signature="e#2956#2957#0" expanded="true" />
-                <element signature="e#2298#2824#0" expanded="true" />
-                <element signature="e#2823#2824#0" expanded="true" />
-                <element signature="e#2870#4191#0" expanded="true" />
-                <element signature="e#3189#3190#0" expanded="true" />
-                <element signature="e#3266#3267#0" expanded="true" />
-                <element signature="e#4190#4191#0" expanded="true" />
-                <element signature="e#4235#5406#0" expanded="true" />
-                <element signature="e#4554#4555#0" expanded="true" />
-                <element signature="e#4630#4631#0" expanded="true" />
-                <element signature="e#5276#5577#0" expanded="true" />
-                <element signature="e#5576#5577#0" expanded="true" />
-                <element signature="e#5405#5406#0" expanded="true" />
-                <element signature="e#5452#6112#0" expanded="true" />
-                <element signature="e#6111#6112#0" expanded="true" />
-                <element signature="e#6248#6249#0" expanded="true" />
-                <element signature="e#6298#6299#0" expanded="true" />
-                <element signature="e#6377#6378#0" expanded="true" />
-                <element signature="e#6427#6428#0" expanded="true" />
-                <element signature="e#6507#6508#0" expanded="true" />
-                <element signature="e#6557#6558#0" expanded="true" />
-                <element signature="e#7051#7052#0" expanded="true" />
-                <element signature="e#7101#7102#0" expanded="true" />
-                <element signature="e#7180#7181#0" expanded="true" />
-                <element signature="e#7230#7231#0" expanded="true" />
-                <element signature="e#7310#7311#0" expanded="true" />
-                <element signature="e#7360#7361#0" expanded="true" />
-                <element signature="e#7854#7855#0" expanded="true" />
-                <element signature="e#7904#7905#0" expanded="true" />
-                <element signature="e#7983#7984#0" expanded="true" />
-                <element signature="e#8033#8034#0" expanded="true" />
-                <element signature="e#8113#8114#0" expanded="true" />
-                <element signature="e#8163#8164#0" expanded="true" />
-                <element signature="e#8557#8821#0" expanded="true" />
-                <element signature="e#8820#8821#0" expanded="true" />
-                <element signature="e#8854#9488#0" expanded="true" />
-                <element signature="e#9487#9488#0" expanded="true" />
-                <element signature="e#9523#9787#0" expanded="true" />
-                <element signature="e#9786#9787#0" expanded="true" />
-                <element signature="e#9820#10454#0" expanded="true" />
-                <element signature="e#10453#10454#0" expanded="true" />
-                <element signature="e#10489#10753#0" expanded="true" />
-                <element signature="e#10752#10753#0" expanded="true" />
-                <element signature="e#10786#11128#0" expanded="true" />
-                <element signature="e#11127#11128#0" expanded="true" />
-                <element signature="e#11174#12043#0" expanded="true" />
-                <element signature="e#12042#12043#0" expanded="true" />
-                <element signature="e#12588#12589#0" expanded="true" />
-                <element signature="e#12633#12634#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="VocabList.txt" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/VocabList.txt">
-          <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
       <file leaf-file-name="Quiz.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/Quiz.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="171">
-              <caret line="9" column="28" selection-start-line="9" selection-start-column="28" selection-end-line="9" selection-end-column="28" />
+            <state relative-caret-position="202">
+              <caret line="20" column="17" selection-start-line="20" selection-start-column="8" selection-end-line="20" selection-end-column="17" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#2272#2273#0" expanded="true" />
-                <element signature="e#2304#2305#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -130,11 +104,10 @@
       <file leaf-file-name="Driver.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/Driver.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="190">
-              <caret line="10" column="22" selection-start-line="10" selection-start-column="22" selection-end-line="10" selection-end-column="22" />
+            <state relative-caret-position="341">
+              <caret line="14" column="26" selection-start-line="14" selection-start-column="26" selection-end-line="14" selection-end-column="26" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#257#265#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -143,12 +116,13 @@
       <file leaf-file-name="DataScraper.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/DataScraper.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-2557">
-              <caret line="137" column="46" selection-start-line="137" selection-start-column="46" selection-end-line="137" selection-end-column="46" />
+            <state relative-caret-position="3481">
+              <caret line="151" column="56" selection-start-line="151" selection-start-column="56" selection-end-line="151" selection-end-column="56" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#6601#6602#0" expanded="true" />
-                <element signature="e#6628#6629#0" expanded="true" />
+                <element signature="e#1341#1539#0" expanded="true" />
+                <element signature="e#1538#1539#0" expanded="true" />
+                <element signature="e#1903#1911#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -165,24 +139,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>loadWordList</find>
-      <find>search</find>
-      <find>dictionar</find>
-      <find>System.out</find>
-      <find>save</find>
-      <find>wordlist</find>
-      <find>prompt.append</find>
-      <find>prompt</find>
-      <find>renderCandidat</find>
-      <find>searchRelative</find>
-      <find>searchWordsIn</find>
-      <find>addwo</find>
-      <find>word</find>
-      <find>out.write</find>
-      <find>infile</find>
-      <find>toString</find>
-      <find>dictionary</find>
-      <find>join</find>
       <find>no words</find>
       <find>searchWord</find>
       <find>searchWord()</find>
@@ -191,10 +147,28 @@
       <find>Hello</find>
       <find>currentWord == nu</find>
       <find>threadLimit</find>
-      <find>addWord</find>
       <find>load</find>
       <find>IndexOutof</find>
       <find>Complete</find>
+      <find>searchWordsIn</find>
+      <find>quizTime</find>
+      <find>pfield</find>
+      <find>addWord</find>
+      <find>searchWords</find>
+      <find>dictionary.totalWords</find>
+      <find>searchAllWords</find>
+      <find>renderCandi</find>
+      <find>mastered</find>
+      <find>makeQ</find>
+      <find>dir</find>
+      <find>dictionary</find>
+      <find>save</find>
+      <find>maxTime</find>
+      <find>activated</find>
+      <find>quiz</find>
+      <find>QuizEditor</find>
+      <find>makeQuiz</find>
+      <find>renderWord</find>
     </findStrings>
     <replaceStrings>
       <replace>deditor</replace>
@@ -211,11 +185,11 @@
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/Vocab2.txt" />
         <option value="$PROJECT_DIR$/VocabList.txt" />
-        <option value="$PROJECT_DIR$/src/main/java/Word.java" />
         <option value="$PROJECT_DIR$/src/main/java/JsonEncoder.java" />
         <option value="$PROJECT_DIR$/src/main/java/GUI.form" />
         <option value="$PROJECT_DIR$/src/main/java/DataScraper.java" />
         <option value="$PROJECT_DIR$/src/main/java/Driver.java" />
+        <option value="$PROJECT_DIR$/src/main/java/Word.java" />
         <option value="$PROJECT_DIR$/src/main/java/Dictionary.java" />
         <option value="$PROJECT_DIR$/src/main/java/Quiz.java" />
         <option value="$PROJECT_DIR$/src/main/java/GUI.java" />
@@ -234,6 +208,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="AndroidView" />
+      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -244,6 +220,11 @@
             <path>
               <item name="VocabMaker" type="b2602c69:ProjectViewProjectNode" />
               <item name="VocabMaker" type="462c0819:PsiDirectoryNode" />
+              <item name="data" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="VocabMaker" type="b2602c69:ProjectViewProjectNode" />
+              <item name="VocabMaker" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -261,24 +242,13 @@
             </path>
             <path>
               <item name="VocabMaker" type="b2602c69:ProjectViewProjectNode" />
-              <item name="VocabMaker" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="GUI" type="e9f4de52:FormNode" />
-            </path>
-            <path>
-              <item name="VocabMaker" type="b2602c69:ProjectViewProjectNode" />
-              <item name="VocabMaker" type="462c0819:PsiDirectoryNode" />
-              <item name="target" type="462c0819:PsiDirectoryNode" />
+              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
       <pane id="Scope" />
-      <pane id="AndroidView" />
-      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -394,56 +364,58 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1280" height="800" extended-state="0" />
+    <frame x="0" y="0" width="1680" height="945" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info anchor="right" id="Palette" order="8" />
+      <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Messages" order="8" weight="0.32486632" />
-      <window_info anchor="right" id="Palette&#9;" order="13" />
+      <window_info anchor="bottom" id="Messages" order="8" weight="0.32698768" />
+      <window_info anchor="right" id="Palette&#9;" order="10" />
       <window_info id="Image Layers" order="2" />
-      <window_info anchor="right" id="Capture Analysis" order="11" />
+      <window_info anchor="right" id="Capture Analysis" order="5" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
-      <window_info anchor="right" id="Maven Projects" order="14" />
+      <window_info anchor="right" id="Maven Projects" order="9" />
       <window_info anchor="bottom" id="Version Control" order="10" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.3275401" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.32698768" />
       <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info id="Capture Tool" order="5" />
       <window_info id="Designer" order="3" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.25" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.3281075" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info anchor="right" id="Ant Build" order="2" weight="0.25" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info id="UI Designer" order="4" />
-      <window_info anchor="right" id="Theme Preview" order="12" />
+      <window_info anchor="right" id="Theme Preview" order="6" />
       <window_info id="Favorites" order="6" side_tool="true" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.39973262" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.39977604" />
       <window_info anchor="right" id="Palette" order="8" />
       <window_info id="Designer" order="3" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="4" weight="0.25" />
       <window_info anchor="right" id="Capture Analysis" order="11" />
       <window_info anchor="right" id="Coverage" order="15" side_tool="true" weight="0.3297619" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="Version Control" order="10" />
       <window_info anchor="right" id="Ant Build" order="2" weight="0.25" />
-      <window_info anchor="bottom" id="Terminal" order="7" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.25" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info id="Favorites" order="6" side_tool="true" />
-      <window_info anchor="bottom" id="Version Control" order="10" />
       <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.3275401" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Capture Tool" order="5" />
       <window_info id="UI Designer" order="4" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.39977604" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="right" id="Theme Preview" order="12" />
       <window_info anchor="right" x="0" y="0" width="270" height="600" id="Documentation" order="7" side_tool="true" weight="0.3296875" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.39977604" />
       <window_info anchor="right" id="Palette&#9;" order="13" />
-      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3281075" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Messages" order="8" weight="0.32486632" />
       <window_info anchor="right" id="Maven Projects" order="14" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.25" />
+      <window_info id="Favorites" order="6" side_tool="true" />
     </layout>
   </component>
   <component name="VcsContentAnnotationSettings">
@@ -451,10 +423,44 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="29" />
+      <option name="time" value="33" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/src/main/java/Word.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="31">
+          <caret line="47" column="24" selection-start-line="47" selection-start-column="24" selection-end-line="47" selection-end-column="24" />
+          <folding>
+            <element signature="e#738#739#0" expanded="true" />
+            <element signature="e#765#766#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/GUI.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="213">
+          <caret line="640" lean-forward="true" selection-start-line="640" selection-end-line="640" />
+          <folding>
+            <element signature="e#12574#14101#0" expanded="true" />
+            <element signature="e#14100#14101#0" expanded="true" />
+            <element signature="e#14234#14235#0" expanded="true" />
+            <element signature="e#14279#14280#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/Dictionary.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="176">
+          <caret line="161" column="14" selection-start-line="161" selection-start-column="14" selection-end-line="161" selection-end-column="14" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="jar://$MAVEN_REPOSITORY$/org/jsoup/jsoup/1.11.3/jsoup-1.11.3.jar!/org/jsoup/nodes/LeafNode.class">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="170">
@@ -571,36 +577,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/notes.txt">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SATWordList.dic">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/GUI.form">
-      <provider selected="true" editor-type-id="ui-designer" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Word.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="475">
-          <caret line="25" column="26" selection-start-line="25" selection-start-column="18" selection-end-line="25" selection-end-column="26" />
-          <folding>
-            <element signature="e#738#739#0" expanded="true" />
-            <element signature="e#765#766#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/JsonEncoder.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="297">
-          <caret line="45" column="65" selection-start-line="45" selection-start-column="65" selection-end-line="45" selection-end-column="65" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$MAVEN_REPOSITORY$/org/jsoup/jsoup/1.11.3/jsoup-1.11.3.jar!/org/jsoup/nodes/Document.class">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="141">
@@ -619,13 +595,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="128">
           <caret line="922" selection-start-line="922" selection-end-line="922" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#28430#28431#0" expanded="true" />
-            <element signature="e#28469#28470#0" expanded="true" />
-            <element signature="e#28499#28500#0" expanded="true" />
-            <element signature="e#28544#28545#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -633,139 +602,87 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="152">
           <caret line="12" selection-start-line="12" selection-end-line="12" />
-          <folding>
-            <element signature="e#359#360#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_60.jdk/Contents/Home/src.zip!/java/util/ArrayList.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="134">
-          <caret line="149" selection-start-line="149" selection-end-line="149" />
-          <folding>
-            <element signature="e#10189#10190#0" expanded="true" />
-            <element signature="e#10216#10217#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_60.jdk/Contents/Home/src.zip!/java/util/AbstractList.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="141">
-          <caret line="600" selection-start-line="600" selection-end-line="600" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_60.jdk/Contents/Home/src.zip!/java/util/ArrayList.java" />
+    <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_60.jdk/Contents/Home/src.zip!/java/util/AbstractList.java" />
     <entry file="file://$PROJECT_DIR$/src/main/java/Driver.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="190">
-          <caret line="10" column="22" selection-start-line="10" selection-start-column="22" selection-end-line="10" selection-end-column="22" />
+        <state relative-caret-position="341">
+          <caret line="14" column="26" selection-start-line="14" selection-start-column="26" selection-end-line="14" selection-end-column="26" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#257#265#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/DataScraper.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2557">
-          <caret line="137" column="46" selection-start-line="137" selection-start-column="46" selection-end-line="137" selection-end-column="46" />
+        <state relative-caret-position="3481">
+          <caret line="151" column="56" selection-start-line="151" selection-start-column="56" selection-end-line="151" selection-end-column="56" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#6601#6602#0" expanded="true" />
-            <element signature="e#6628#6629#0" expanded="true" />
+            <element signature="e#1341#1539#0" expanded="true" />
+            <element signature="e#1538#1539#0" expanded="true" />
+            <element signature="e#1903#1911#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SATWords.dic">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/JsonEncoder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="176">
+          <caret line="53" column="54" selection-start-line="53" selection-start-column="51" selection-end-line="53" selection-end-column="54" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/Dictionary.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="300" selection-start-line="300" selection-end-line="300" />
+        <state relative-caret-position="176">
+          <caret line="37" column="24" selection-start-line="37" selection-start-column="20" selection-end-line="37" selection-end-column="24" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/Quiz.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="171">
-          <caret line="9" column="28" selection-start-line="9" selection-start-column="28" selection-end-line="9" selection-end-column="28" />
+        <state relative-caret-position="202">
+          <caret line="20" column="17" selection-start-line="20" selection-start-column="8" selection-end-line="20" selection-end-column="17" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#2272#2273#0" expanded="true" />
-            <element signature="e#2304#2305#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/GUI.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2254">
-          <caret line="640" lean-forward="true" selection-start-line="640" selection-end-line="640" />
+        <state relative-caret-position="-4008">
+          <caret line="365" column="16" lean-forward="true" selection-start-line="365" selection-start-column="16" selection-end-line="365" selection-end-column="16" />
           <folding>
-            <element signature="e#2495#2496#0" expanded="true" />
-            <element signature="e#2547#2548#0" expanded="true" />
-            <element signature="e#2626#2627#0" expanded="true" />
-            <element signature="e#2678#2679#0" expanded="true" />
-            <element signature="e#2758#2759#0" expanded="true" />
-            <element signature="e#2810#2811#0" expanded="true" />
-            <element signature="e#2867#2868#0" expanded="true" />
-            <element signature="e#2956#2957#0" expanded="true" />
-            <element signature="e#2298#2824#0" expanded="true" />
-            <element signature="e#2823#2824#0" expanded="true" />
-            <element signature="e#2870#4191#0" expanded="true" />
-            <element signature="e#3189#3190#0" expanded="true" />
-            <element signature="e#3266#3267#0" expanded="true" />
-            <element signature="e#4190#4191#0" expanded="true" />
-            <element signature="e#4235#5406#0" expanded="true" />
-            <element signature="e#4554#4555#0" expanded="true" />
-            <element signature="e#4630#4631#0" expanded="true" />
-            <element signature="e#5276#5577#0" expanded="true" />
-            <element signature="e#5576#5577#0" expanded="true" />
-            <element signature="e#5405#5406#0" expanded="true" />
-            <element signature="e#5452#6112#0" expanded="true" />
-            <element signature="e#6111#6112#0" expanded="true" />
-            <element signature="e#6248#6249#0" expanded="true" />
-            <element signature="e#6298#6299#0" expanded="true" />
-            <element signature="e#6377#6378#0" expanded="true" />
-            <element signature="e#6427#6428#0" expanded="true" />
-            <element signature="e#6507#6508#0" expanded="true" />
-            <element signature="e#6557#6558#0" expanded="true" />
-            <element signature="e#7051#7052#0" expanded="true" />
-            <element signature="e#7101#7102#0" expanded="true" />
-            <element signature="e#7180#7181#0" expanded="true" />
-            <element signature="e#7230#7231#0" expanded="true" />
-            <element signature="e#7310#7311#0" expanded="true" />
-            <element signature="e#7360#7361#0" expanded="true" />
-            <element signature="e#7854#7855#0" expanded="true" />
-            <element signature="e#7904#7905#0" expanded="true" />
-            <element signature="e#7983#7984#0" expanded="true" />
-            <element signature="e#8033#8034#0" expanded="true" />
-            <element signature="e#8113#8114#0" expanded="true" />
-            <element signature="e#8163#8164#0" expanded="true" />
-            <element signature="e#8557#8821#0" expanded="true" />
-            <element signature="e#8820#8821#0" expanded="true" />
-            <element signature="e#8854#9488#0" expanded="true" />
-            <element signature="e#9487#9488#0" expanded="true" />
-            <element signature="e#9523#9787#0" expanded="true" />
-            <element signature="e#9786#9787#0" expanded="true" />
-            <element signature="e#9820#10454#0" expanded="true" />
-            <element signature="e#10453#10454#0" expanded="true" />
-            <element signature="e#10489#10753#0" expanded="true" />
-            <element signature="e#10752#10753#0" expanded="true" />
-            <element signature="e#10786#11128#0" expanded="true" />
-            <element signature="e#11127#11128#0" expanded="true" />
-            <element signature="e#11174#12043#0" expanded="true" />
-            <element signature="e#12042#12043#0" expanded="true" />
-            <element signature="e#12588#12589#0" expanded="true" />
-            <element signature="e#12633#12634#0" expanded="true" />
+            <element signature="e#12574#14101#0" expanded="true" />
+            <element signature="e#14100#14101#0" expanded="true" />
+            <element signature="e#14234#14235#0" expanded="true" />
+            <element signature="e#14279#14280#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/VocabList.txt">
-      <provider selected="true" editor-type-id="text-editor" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/Word.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="202">
+          <caret line="19" column="27" selection-start-line="19" selection-start-column="19" selection-end-line="19" selection-end-column="27" />
+          <folding>
+            <element signature="e#738#739#0" expanded="true" />
+            <element signature="e#765#766#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
     </entry>
   </component>
   <component name="masterDetails">

@@ -17,6 +17,8 @@ public class Word {
 
     public double time = -1;
 
+    public boolean mastered = false;
+
     public Word(String word)
     {
         this.word = word;

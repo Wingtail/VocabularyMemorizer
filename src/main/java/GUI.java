@@ -60,8 +60,6 @@ public class GUI {
         keyword.setContentType("text/html");
         QuizEditor.setContentType("text/html");
 
-
-
         if(dictionary == null)
         {
             dictionary = new Dictionary("standard", this);
@@ -180,6 +178,7 @@ public class GUI {
                          @Override
                          public void run() {
                              dictionary.searchWordsInFile(chooser.getSelectedFile().getPath());
+                             dictionary.searchAllWords(dictionary.start, dictionary.totalWords);
                              prompt.append("Complete!\n");
                          }
                      });
@@ -200,7 +199,8 @@ public class GUI {
 
                      dictionary.name = chooser.getSelectedFile().getName();
                      System.out.println(chooser.getCurrentDirectory().toString());
-                     dictionary.save(chooser.getCurrentDirectory().toString()+dictionary.name+".dic");
+                     String dir = chooser.getCurrentDirectory().toString();
+                     dictionary.save(dir.substring(0,dir.lastIndexOf("."))+dictionary.name+".dic");
                  }
              }
          });
@@ -358,24 +358,38 @@ public class GUI {
             }
         });
 
+
         QuizEditor.addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseMoved(MouseEvent e) {
                 if(!quiz.activated)
                 {
+                    quiz.selectiveLearn(makeQuizSet(5));
                     quiz.nextWord();
 
                     System.out.println("Num Words in Dictionary: "+quiz.dictionary.numWords);
                     if(quiz.currentWord != null) {
                         QuizEditor.setText("<html><center><font size=\"40\"><b>" + quiz.currentWord.getWord() + "</b></font></center></html>");
                         quiz.activated = true;
+                    }else if(!quiz.sectionComplete){
+                        QuizEditor.setText("<html><center><font size=\"40\"><b>" + "Take a break. ETA "+quiz.maxTimetoWait/1000+ "seconds</b></font></center></html>");
                     }else{
-                        QuizEditor.setText("<html><center><font size=\"40\"><b>" + "NO WORDS TO TEST!" + "</b></font></center></html>");
+                        QuizEditor.setText("<html><center><font size=\"40\"><b>" + "Words Mastered!" + "</b></font></center></html>");
                     }
 
-                }else if(quiz.currentWord == null)
-                {
-                    quiz.activated = false;
+                }else{
+                        quiz.getMaxTime();
+                        if (quiz.maxTimetoWait > 0) {
+                            QuizEditor.setText("<html><center><font size=\"40\"><b>" + "Take a break. ETA " + quiz.maxTimetoWait / 1000 + "seconds</b></font></center></html>");
+                        }else{
+                            quiz.nextWord();
+                            if(quiz.currentWord != null) {
+                                QuizEditor.setText("<html><center><font size=\"40\"><b>" + quiz.currentWord.getWord() + "</b></font></center></html>");
+                                quiz.activated = true;
+                            }else{
+                                QuizEditor.setText("<html><center><font size=\"40\"><b>" + "Words Mastered!" + "</b></font></center></html>");
+                            }
+                        }
                 }
             }
         });
@@ -418,11 +432,13 @@ public class GUI {
         if(correct) {
             long time = System.currentTimeMillis();
             quiz.nextWord();
-            if(quiz.currentWord == null)
-            {
-                QuizEditor.setText("<html><center><font size=\"40\"><b>" + "NO WORDS LEFT TO TEST" + "</b></font></center></html>");
-            }else {
+            if(quiz.currentWord != null) {
                 QuizEditor.setText("<html><center><font size=\"40\"><b>" + quiz.currentWord.getWord() + "</b></font></center></html>");
+                quiz.activated = true;
+            }else if(!quiz.sectionComplete){
+                QuizEditor.setText("<html><center><font size=\"40\"><b>" + "Take a break. ETA "+quiz.maxTimetoWait/1000+ "seconds</b></font></center></html>");
+            }else{
+                QuizEditor.setText("<html><center><font size=\"40\"><b>" + "Words Mastered!" + "</b></font></center></html>");
             }
         }else{
             String keys = keywordBuilder(quiz.currentWord);
@@ -637,6 +653,29 @@ public class GUI {
         }
 
         return word;
+    }
+
+    public ArrayList<Word> makeQuizSet(int numWords)
+    {
+        ArrayList<Word> wordset = new ArrayList<>();
+        int i;
+        int count = 0;
+        for(i=0;i<numWords;i++)
+        {
+            if(!dictionary.totalWords.get(count).mastered)
+            {
+                wordset.add(dictionary.totalWords.get(count));
+            }else{
+                i--;
+            }
+
+            if(count >= dictionary.totalWords.size())
+            {
+                break;
+            }
+            count++;
+        }
+        return wordset;
     }
 
     public static void main(String[] args) {
