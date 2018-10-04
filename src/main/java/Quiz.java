@@ -1,14 +1,19 @@
+import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 
 import static jdk.nashorn.internal.objects.NativeMath.max;
 
 public class Quiz {
 
-
     Dictionary dictionary;
-    boolean activated;
     Word currentWord = null;
-    boolean sectionComplete = false;
+
+    boolean correct = false;
+
+    short state = 0; //0 is inactive, 1 is active, 2 is all words need to wait, 3 is section complete, 4 is wait, 5 is incorrect
+
+    String lastInput;
 
     double maxTimetoWait = 0.0;
 
@@ -18,15 +23,24 @@ public class Quiz {
     public Quiz(Dictionary dictionary)
     {
         this.dictionary = dictionary;
-        activated = false;
         activeWords = new ArrayList<>();
         dictionaryWords = new ArrayList<>();
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while(true)
+                {
+                    checkState();
+                }
+            }
+        });
+        thread.start();
         //dictionaryWords.addAll(dictionary.totalWords);
     }
 
     public void selectiveLearn(ArrayList<Word> wordlist)
     {
-        sectionComplete = false;
+        state = 1;
         dictionaryWords = wordlist;
     }
 
@@ -56,6 +70,7 @@ public class Quiz {
 
     public boolean checkCorrect(String key)
     {
+        lastInput = key;
         if(currentWord.keywords().length <=0)
         {
             System.out.println("No keywords!");
@@ -89,6 +104,102 @@ public class Quiz {
     public double max(double a, double b)
     {
         return (a>b)?a:b;
+    }
+
+    public void addKeyword()
+    {
+        if(currentWord != null) {
+            JFrame frame = new JFrame();
+            frame.setContentPane(new AddKeyWord(this, frame).main);
+            frame.setPreferredSize(new Dimension(200, 100));
+            frame.pack();
+            frame.setVisible(true);
+        }
+    }
+
+    public void setPracticeAmount()
+    {
+            JFrame frame = new JFrame();
+            frame.setContentPane(new setQuizAmount(this, frame).main);
+            frame.setPreferredSize(new Dimension(200,100));
+            frame.pack();
+            frame.setVisible(true);
+    }
+
+    public void override()
+    {
+        if(state == 5 && !correct) {
+            consecRightEval(true);
+            correct = true;
+            state = 1;
+        }
+    }
+
+    public void submitAnswer(String key)
+    {
+        if(checkCorrect(key))
+        {
+            consecRightEval(true);
+            correct = true;
+            state = 1;
+        }else if(!correct)
+        {
+            state = 5;
+            consecRightEval(false);
+        }
+    }
+
+    public void checkState()
+    {
+        switch(state)
+        {
+            case 0:
+                if(dictionaryWords.size() > 0)
+                {
+                    state = 1;
+                }
+                break;
+            case 1:
+                nextWord();
+                break;
+            case 2:
+                getMaxTime();
+                if(maxTimetoWait < 0)
+                {
+                    state = 1;
+                }
+                break;
+            case 3:
+                if(dictionaryWords.size() > 0)
+                {
+                    state = 1;
+                }
+                break;
+
+        }
+    }
+
+    public void makeQuizSet(int numWords)
+    {
+        ArrayList<Word> wordset = new ArrayList<>();
+        int i;
+        int count = 0;
+        for(i=0;i<numWords;i++)
+        {
+            if(!dictionary.totalWords.get(count).mastered)
+            {
+                wordset.add(dictionary.totalWords.get(count));
+            }else{
+                i--;
+            }
+
+            if(count >= dictionary.totalWords.size())
+            {
+                break;
+            }
+            count++;
+        }
+        dictionaryWords = wordset;
     }
 
     public void nextWord()
@@ -125,9 +236,12 @@ public class Quiz {
             }
         }
         if(activeWords.size() <= 0 && dictionaryWords.size() <= 0){
-            sectionComplete = true;
+            state = 3;
         }else if(currentWord == null){
             getMaxTime();
+            state = 2;
+        }else{
+            state = 4;
         }
     }
 

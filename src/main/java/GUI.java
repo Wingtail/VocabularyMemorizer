@@ -353,47 +353,110 @@ public class GUI {
                 {
                     command = pfield.getText();
                     pfield.setText("");
-                    renderWord(quizTime(command));
+                    quiz.submitAnswer(command);
                 }
             }
         });
 
-
-        QuizEditor.addMouseMotionListener(new MouseMotionAdapter() {
+        Thread quizThread = new Thread(new Runnable() {
             @Override
-            public void mouseMoved(MouseEvent e) {
-                if(!quiz.activated)
+            public void run() {
+                int oldCase = -1;
+                while(true)
                 {
-                    quiz.selectiveLearn(makeQuizSet(5));
-                    quiz.nextWord();
-
-                    System.out.println("Num Words in Dictionary: "+quiz.dictionary.numWords);
-                    if(quiz.currentWord != null) {
-                        QuizEditor.setText("<html><center><font size=\"40\"><b>" + quiz.currentWord.getWord() + "</b></font></center></html>");
-                        quiz.activated = true;
-                    }else if(!quiz.sectionComplete){
-                        QuizEditor.setText("<html><center><font size=\"40\"><b>" + "Take a break. ETA "+quiz.maxTimetoWait/1000+ "seconds</b></font></center></html>");
-                    }else{
-                        QuizEditor.setText("<html><center><font size=\"40\"><b>" + "Words Mastered!" + "</b></font></center></html>");
-                    }
-
-                }else{
-                        quiz.getMaxTime();
-                        if (quiz.maxTimetoWait > 0) {
-                            QuizEditor.setText("<html><center><font size=\"40\"><b>" + "Take a break. ETA " + quiz.maxTimetoWait / 1000 + "seconds</b></font></center></html>");
-                        }else{
-                            quiz.nextWord();
-                            if(quiz.currentWord != null) {
-                                QuizEditor.setText("<html><center><font size=\"40\"><b>" + quiz.currentWord.getWord() + "</b></font></center></html>");
-                                quiz.activated = true;
-                            }else{
+                    switch(quiz.state)
+                    {
+                        case 0:
+                            if(oldCase != 0) {
+                                oldCase = 0;
+                                QuizEditor.setText("<html><center><font size=\"40\"><b>" + "NO WORDS TO TEST!</b></font></center></html>");
+                            }
+                            break;
+                        case 1:
+                            if(oldCase != 1) {
+                                oldCase = 1;
+                            }
+                            break;
+                        case 2:
+                            if(oldCase != 2) {
+                                oldCase = 2;
+                                QuizEditor.setText("<html><center><font size=\"40\"><b>" + "Take a break. ETA " + quiz.maxTimetoWait / 1000 + "seconds</b></font></center></html>");
+                            }
+                            break;
+                        case 3:
+                            if(oldCase != 3) {
+                                oldCase = 3;
                                 QuizEditor.setText("<html><center><font size=\"40\"><b>" + "Words Mastered!" + "</b></font></center></html>");
                             }
-                        }
+                            break;
+                        case 4:
+                            if(oldCase != 4) {
+                                oldCase = 4;
+                                QuizEditor.setText("<html><center><font size=\"40\"><b>" + quiz.currentWord.getWord() + "</b></font></center></html>");
+                            }
+                            break;
+                        case 5:
+                            if(oldCase != 5)
+                            {
+                                oldCase = 5;
+                                String keys = keywordBuilder(quiz.currentWord);
+                                QuizEditor.setText(keys);
+                            }
+                            break;
+                    }
                 }
             }
         });
+        quizThread.start();
 
+        QuizEditor.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if(e.isPopupTrigger())
+                {
+                    generatePopMenu(e);
+                }
+            }
+
+        });
+    }
+
+    public void generatePopMenu(MouseEvent e)
+    {
+        JPopupMenu pop = new JPopupMenu();
+        JMenuItem item = new JMenuItem("addKeyword");
+        JMenuItem override = new JMenuItem("Override");
+        JMenuItem quizset = new JMenuItem("setPracticeAmount");
+
+        item.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                quiz.addKeyword();
+            }
+        });
+        override.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                quiz.override();
+            }
+        });
+        quizset.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                quiz.setPracticeAmount();
+            }
+        });
+        if(quiz.state > 3)
+        {
+            pop.add(item);
+        }
+
+        if(quiz.state == 5)
+        {
+            pop.add(override);
+        }
+        pop.add(quizset);
+        pop.show(e.getComponent(), e.getX(), e.getY());
     }
 
     public boolean quizTime(String key)
@@ -419,103 +482,6 @@ public class GUI {
         builder.append("</ul>");
         builder.append("</font></html>");
         return builder.toString();
-    }
-
-    public void renderWord(boolean correct)
-    {
-        /*System.out.println("---------------------");
-        for(Word word : quiz.dictionary.totalWords)
-        {
-            System.out.println(word.getWord()+"  seconds left: "+(word.time - System.currentTimeMillis())/1000);
-        }*/
-
-        if(correct) {
-            long time = System.currentTimeMillis();
-            quiz.nextWord();
-            if(quiz.currentWord != null) {
-                QuizEditor.setText("<html><center><font size=\"40\"><b>" + quiz.currentWord.getWord() + "</b></font></center></html>");
-                quiz.activated = true;
-            }else if(!quiz.sectionComplete){
-                QuizEditor.setText("<html><center><font size=\"40\"><b>" + "Take a break. ETA "+quiz.maxTimetoWait/1000+ "seconds</b></font></center></html>");
-            }else{
-                QuizEditor.setText("<html><center><font size=\"40\"><b>" + "Words Mastered!" + "</b></font></center></html>");
-            }
-        }else{
-            String keys = keywordBuilder(quiz.currentWord);
-            QuizEditor.setText(keys);
-        }
-
-    }
-
-    public String executeCommand()
-    {
-            if(command.replaceAll("\\s","").equals("save"))
-            {
-                dictionary.addWord(currentWord);
-                prompt.append("saved\n");
-            }else if(command.replaceAll("\\s","").equals("clear"))
-            {
-                prompt.setText("");
-            }
-            else if(command.contains("addKeyword"))
-            {
-                currentWord.addKeyword(command.substring(command.indexOf("\"")+1,command.length()-1));
-                prompt.append("added keyword\n");
-            }
-            else if(command.replaceAll("\\s","").equals("retrieveWordList"))
-            {
-                JFileChooser chooser = new JFileChooser();
-                chooser.setCurrentDirectory(new File("."));
-                int returnval = chooser.showOpenDialog(null);
-
-                if(returnval == JFileChooser.APPROVE_OPTION) {
-                    prompt.append("Retrieving file..\n");
-                    dictionary.searchWordsInFile(chooser.getSelectedFile().getPath());
-                    prompt.append("Complete!\n");
-                }
-            }else if(command.replaceAll("\\s","").equals("toggleAutoSave"))
-            {
-                autosave = !autosave;
-                prompt.append("autosave is now "+autosave+"\n");
-
-            }else if(command.contains("saveDictionary"))
-            {
-                if(command.indexOf(" ") >= 0)
-                {
-                    dictionary.name = command.substring(command.indexOf(" "));
-                }
-                dictionary.save("");
-                prompt.append(dictionary.name+" saved! Words: "+dictionary.numWords+"\n");
-
-            }
-            else if(command.contains("loadDictionary"))
-            {
-                JFileChooser chooser = new JFileChooser();
-                chooser.setCurrentDirectory(new File("."));
-                int returnval = chooser.showOpenDialog(null);
-                if(returnval == JFileChooser.APPROVE_OPTION) {
-                    prompt.append("Retrieving file..\n");
-                    dictionary = dictionary.load(chooser.getSelectedFile().getPath());
-                    quiz.dictionary = dictionary;
-                    prompt.append(dictionary.name+" loaded! Words: "+dictionary.numWords+"\n");
-                    prompt.append("Complete!\n");
-                }
-
-            }else if(command.equals("help"))
-            {
-                prompt.append("loadDictionary \'dictionaryName\'-> loadsDictionaryFile. Don't need quotations while writing dictionary name\n");
-                prompt.append("saveDictionary -> savesDictionaryFile\n");
-                prompt.append("toggleAutoSave -> Autosave or not?\n");
-                prompt.append("addKeyword -> add keyword to current word you've searched\n");
-                prompt.append("retrieveWordList -> scrapes all vocabulary put onto a text file into useful interfaces\n");
-                prompt.append("save -> saves current word you've searched (practically useless after you toggle auto save)\n");
-            }
-            else{
-                prompt.append("Command Not Found!\nTry typing help");
-            }
-            textErase = true;
-
-        return command;
     }
 
     public void searchWord()
@@ -653,29 +619,6 @@ public class GUI {
         }
 
         return word;
-    }
-
-    public ArrayList<Word> makeQuizSet(int numWords)
-    {
-        ArrayList<Word> wordset = new ArrayList<>();
-        int i;
-        int count = 0;
-        for(i=0;i<numWords;i++)
-        {
-            if(!dictionary.totalWords.get(count).mastered)
-            {
-                wordset.add(dictionary.totalWords.get(count));
-            }else{
-                i--;
-            }
-
-            if(count >= dictionary.totalWords.size())
-            {
-                break;
-            }
-            count++;
-        }
-        return wordset;
     }
 
     public static void main(String[] args) {
