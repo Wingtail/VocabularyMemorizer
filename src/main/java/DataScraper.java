@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -88,13 +89,17 @@ public class DataScraper extends Thread {
 
     public void run()
     {
-        dictionary(w);
-        thesaurus(w);
-        etymology(w);
+        if(connect("https://www.google.com/",40,10) != null) {
+            dictionary(w);
+            thesaurus(w);
+            etymology(w);
 
-        if(!interrupted && !dummy) {
-            dictionary.gui.consoleProgress.setValue(dictionary.gui.consoleProgress.getValue() + 1);
-            complete = true;
+            if (!interrupted && !dummy) {
+                dictionary.gui.consoleProgress.setValue(dictionary.gui.consoleProgress.getValue() + 1);
+                complete = true;
+            }
+        }else{
+            dictionary.gui.prompt.append("CHECK INTERNET CONNECTION! CANNOT CONNECT!\n");
         }
     }
 
@@ -206,6 +211,7 @@ public class DataScraper extends Thread {
 
 
         Document doc = connect("https://www.dictionary.com/browse/"+word.toString()+"?s=t", 1000, 10);
+
         if(doc.clone().select("span.css-1m7ldyv.e6aw9qa0").size() > 0)
         {
             String switchWord = doc.clone().selectFirst("h2.css-6gthty.e19m0k9k0").select("a").first().attr("abs:href");
@@ -278,10 +284,14 @@ public class DataScraper extends Thread {
             try {
                 return Jsoup.connect(url).userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0")
                         .referrer("http://www.google.com").timeout(1000 * timeoutsec).ignoreHttpErrors(true).validateTLSCertificates(false).get();
-            }catch(SocketException e)
+            }catch (UnknownHostException e)
+            {
+                dictionary.gui.prompt.append("CANNOT CONECT! CHECK INTERNET CONNECTION!\n");
+                return null;
+            }
+            catch(SocketException e)
             {
                 count++;
-
             }
             catch (IOException e) {
                 e.printStackTrace();

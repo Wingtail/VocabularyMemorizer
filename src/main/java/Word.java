@@ -8,16 +8,21 @@ public class Word {
     private String[] exampleSentences;
     private String etymology;
 
-    public int consecRight = 0;
-    public int consecWrong = 0;
+    private int consecRight = 0;
+    private int consecWrong = 0;
 
-    public int totConsecRight = 0;
-    public int dataPoints = 0;
+    int definitionChoice = 0;
+    int wordChoice = 0;
+
+    private int totConsecRight = 0;
+    private int dataPoints = 0;
     public double avgConsecRight = 0.0;
 
     public double time = -1;
 
     public boolean mastered = false;
+
+    public int level = 0;
 
     public Word(String word)
     {
@@ -58,6 +63,42 @@ public class Word {
     public String getPronounciation()
     {
         return pronounciation;
+    }
+    
+    public void evaluateScore(boolean correct)
+    {
+        if(dataPoints > 50)
+        {
+            totConsecRight = (int)Math.round(avgConsecRight);
+            dataPoints = 1;
+        }
+        if(correct)
+        {
+            consecRight++;
+            consecWrong = 0;
+            avgConsecRight = (double)(totConsecRight+consecRight)/(dataPoints+1);
+        }else{
+            consecWrong++;
+            totConsecRight += consecRight - consecWrong;
+            dataPoints++;
+            consecRight = 0;
+            avgConsecRight = (double)totConsecRight/dataPoints;
+        }
+    }
+    
+    public void evaluateLevel()
+    {
+        if(avgConsecRight <= 1)
+        {
+            level = 1;
+        }else if(avgConsecRight <= 6){
+            level = 2;
+        }else if(avgConsecRight <= 10)
+        {
+            level = 3;
+        }else{
+            level = 4;
+        }
     }
 
     public void addKeyword(String key)

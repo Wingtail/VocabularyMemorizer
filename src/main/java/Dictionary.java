@@ -302,7 +302,7 @@ public class Dictionary {
                 }
 
 
-            if (i == words.length - 1) {
+            if (i == words.length - 1 && current.getWords()!=null) {
                 return current.getWords();
             }
         }
