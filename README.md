@@ -18,7 +18,7 @@ Vocabulary Memorizer is currently available for only Mac OS.
 
 ### Using VocabularyMemorizer
 
-* Make sure you are connected to the internet. VocabularyMemorizer accesses the internet to retrieve the definitions, synonyms, and etymology for each word. 
+* Make sure you are connected to the internet. VocabularyMemorizer uses web-scraping features to retrieve the definitions, synonyms, and etymology for each word. 
 
 #### Loading your wordlist into VocabularyMemorizer
 
