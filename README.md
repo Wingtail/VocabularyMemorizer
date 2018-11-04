@@ -27,11 +27,11 @@ Vocabulary Memorizer is currently available for only Mac OS.
 2. Click File>Load Wordlist and select the .txt file that has your vocabulary list
 3. Refer to the Console tab to check the app's progress in retrieving all of the wordlists.
 
-* You do not have to necessarily go through this process to search individual words. Just type the vocabulary word into the textfield in any of the Definition, Etymology, and Synonyms tab. VocabularyMemorizer will automatically search your word on the internet and add it into your temporary dictionary.
+* You do not have to necessarily go through this process to search individual words. You can search a word into the textfield in any of the Definition, Etymology, and Synonyms tab. VocabularyMemorizer will automatically search your word on the internet and add it into your temporary dictionary. At first, it will take some time to scrape the vocabulary you searched. However, there will be no delay for the second time you search that word since it is saved into the temporary dictionary.
 
 #### Saving/Loading Dictionary
 
-* Vocabulary Memorizer saves and load dictionary file in .dic format.
+* Vocabulary Memorizer saves and loads dictionary files in .dic format.
 
 To save the dictionary that VocabularyMemorizer temporarily created for you, click File>Save Dictionary.
 To load the dictionary that you have already saved, click File>Load Dictionary and search your .dic file.
@@ -39,3 +39,6 @@ To load the dictionary that you have already saved, click File>Load Dictionary a
 #### Using Practice(Quiz) tab
 
 Right click to see all the options that the Practice environment presents to you.
+* Select SetPracticeAmount and type the number of words you want to memorize. VocabularyMaker will randomly select words that you don't know into the practice session.
+
+* Select SelectWords
