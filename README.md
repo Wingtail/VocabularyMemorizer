@@ -6,7 +6,7 @@ Vocabulary Memorizer helps you to effectively memorize vocabulary words. It auto
 
 ### Prerequisites
 
-1. Java version greater than 1.7
+1. Java version greater greater than or equal to 1.7
 
 ### Installation
 
