@@ -39,6 +39,6 @@ To load the dictionary that you have already saved, click File>Load Dictionary a
 #### Using Practice(Quiz) tab
 
 Right click to see all the options that the Practice environment presents to you.
-* Select SetPracticeAmount and type the number of words you want to memorize. VocabularyMaker will randomly select words that you don't know into the practice session.
-
-* Select SelectWords
+* Select setPracticeAmount and type the number of words you want to memorize. VocabularyMaker will randomly select words that you don't know into the practice session.
+* Select selectWordstoPractice to select specific words that you want to practice.
+* Select setMasteredWordstoNeedPractice to make all the words you have previously mastered into the practice list.
